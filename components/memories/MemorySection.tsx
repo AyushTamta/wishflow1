@@ -1,23 +1,34 @@
 "use client";
 
+import { useState } from "react";
+
 import { memories } from "@/lib/content";
+import MovieTicket from "@/components/ticket/MovieTicket";
 import MemoryCard from "./MemoryCard";
 
 export default function MemorySection() {
-  return (
-    <section className="min-h-screen bg-[#060912] py-32 px-8">
-      <h2 className="text-5xl font-bold text-center mb-20">
-        Our Story
-      </h2>
+  const [started, setStarted] = useState(false);
 
-      <div className="max-w-6xl mx-auto space-y-24">
-        {memories.map((memory, index) => (
-          <MemoryCard
-            key={index}
-            image={memory.image}
-            caption={memory.caption}
-          />
-        ))}
+  if (!started) {
+    return <MovieTicket onStart={() => setStarted(true)} />;
+  }
+
+  return (
+    <section className="min-h-screen bg-[#060912] py-24 px-6">
+      <div className="mx-auto max-w-6xl">
+        <h2 className="mb-20 text-center text-5xl font-bold">
+          Our Story
+        </h2>
+
+        <div className="space-y-20">
+          {memories.map((memory, index) => (
+            <MemoryCard
+              key={index}
+              image={memory.image}
+              caption={memory.caption}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

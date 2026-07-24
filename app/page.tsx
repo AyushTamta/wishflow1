@@ -1,34 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Countdown,
-  Curtains,
-  FilmGrain,
-  ProjectorBeam,
-} from "@/components/theatre";
 
-import { MarineDriveHero } from "@/components/hero";
+import Countdown from "@/components/theatre/Countdown";
+import Curtains from "@/components/theatre/Curtains";
+import FilmGrain from "@/components/theatre/FilmGrain";
+import ProjectorBeam from "@/components/theatre/ProjectorBeam";
+
+import MarineDriveHero from "@/components/hero/MarineDriveHero";
+import MusicPlayer from "@/components/music/MusicPlayer";
 
 export default function Home() {
   const [openCurtains, setOpenCurtains] = useState(false);
 
   return (
-    <main className="relative h-screen w-screen overflow-hidden bg-black">
-      {/* Hero (behind curtains) */}
-      <MarineDriveHero />
-
-      {/* Cinema Effects */}
-      <ProjectorBeam />
+    <main className="relative h-screen w-full overflow-hidden bg-black text-white">
+      {/* Film Grain */}
       <FilmGrain />
 
-      {/* Countdown */}
+      {/* Projector Beam */}
+      <ProjectorBeam />
+
+      {/* Hero Scene */}
+      <MarineDriveHero />
+
+      {/* Theatre Countdown */}
       {!openCurtains && (
         <Countdown onComplete={() => setOpenCurtains(true)} />
       )}
 
-      {/* Curtains */}
+      {/* Opening Curtains */}
       <Curtains open={openCurtains} />
+
+      {/* Background Music */}
+      <MusicPlayer />
     </main>
   );
 }

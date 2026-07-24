@@ -1,32 +1,58 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { hero } from "@/lib/content";
 
 export default function HeroTitle() {
   return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center text-center"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{
-        opacity: 1,
-        y: 0,
-      }}
-      transition={{
-        delay: 0.8,
-        duration: 1.4,
-      }}
-    >
-      <p className="mb-6 text-neutral-300 tracking-[0.5em] uppercase">
+    <div className="absolute inset-0 z-30 flex flex-col items-center justify-center text-center px-6">
+      <motion.p
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: 0.8,
+          duration: 1,
+        }}
+        className="mb-6 uppercase tracking-[0.4em] text-white/70"
+      >
         Every great story begins with a single frame
-      </p>
+      </motion.p>
 
-      <h1 className="text-7xl md:text-9xl font-bold">
-        Happy Birthday
-      </h1>
+      <motion.h1
+        initial={{
+          opacity: 0,
+          scale: 0.92,
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+        }}
+        transition={{
+          delay: 1.2,
+          duration: 1,
+        }}
+        className="text-6xl md:text-8xl font-black"
+      >
+        {hero.title}
+      </motion.h1>
 
-      <h2 className="mt-4 text-4xl text-white/80">
-        Ambay ❤️
-      </h2>
-    </motion.div>
+      <motion.h2
+        initial={{
+          opacity: 0,
+          y: 30,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          delay: 1.8,
+          duration: 1,
+        }}
+        className="mt-6 text-3xl md:text-5xl text-yellow-300 font-light"
+      >
+        {hero.name}
+      </motion.h2>
+    </div>
   );
 }

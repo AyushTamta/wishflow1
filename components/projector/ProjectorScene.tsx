@@ -9,16 +9,18 @@ import DustParticles from "./DustParticles";
 import Countdown from "./Countdown";
 
 import { ActiveStorySceneProps } from "@/types/scene";
+import { useScene } from "@/hooks/useScene";
 
 const POWER_ON_DELAY = 500;
 const COUNTDOWN_DELAY = 2200;
-const TRANSITION_DELAY = 5200;
-const FLASH_DURATION = 700;
+const FLASH_DELAY = 5200;
 
 export default function ProjectorScene({
   active,
   onComplete,
 }: ActiveStorySceneProps) {
+  useScene("projector", active);
+
   const [powerOn, setPowerOn] = useState(false);
   const [showCountdown, setShowCountdown] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
@@ -47,11 +49,14 @@ export default function ProjectorScene({
     timers.push(
       window.setTimeout(() => {
         setTransitioning(true);
+      }, FLASH_DELAY)
+    );
 
-        window.setTimeout(() => {
-          onComplete();
-        }, FLASH_DURATION);
-      }, TRANSITION_DELAY)
+    // Advance to the next scene after the flash animation
+    timers.push(
+      window.setTimeout(() => {
+        onComplete();
+      }, FLASH_DELAY + 700)
     );
 
     return () => {
@@ -73,7 +78,6 @@ export default function ProjectorScene({
         },
       }}
     >
-      {/* Background */}
       <motion.div
         className="absolute inset-0"
         animate={{
@@ -94,13 +98,10 @@ export default function ProjectorScene({
         }}
       />
 
-      {/* Ambient projector glow */}
       <motion.div
         className="pointer-events-none absolute inset-0"
         animate={{
-          opacity: powerOn
-            ? [0.08, 0.18, 0.1]
-            : 0,
+          opacity: powerOn ? [0.08, 0.18, 0.1] : 0,
         }}
         transition={{
           duration: 5,
@@ -112,11 +113,14 @@ export default function ProjectorScene({
         }}
       />
 
-      {/* Beam */}
       <AnimatePresence>
         {powerOn && (
           <motion.div
-            initial={{ opacity: 0, scaleY: 0.9 }}
+            className="absolute inset-0"
+            initial={{
+              opacity: 0,
+              scaleY: 0.9,
+            }}
             animate={{
               opacity: transitioning ? 0 : 1,
               scaleY: 1,
@@ -127,7 +131,6 @@ export default function ProjectorScene({
             transition={{
               duration: 0.8,
             }}
-            className="absolute inset-0"
           >
             <ProjectorBeam />
             <DustParticles />
@@ -135,7 +138,6 @@ export default function ProjectorScene({
         )}
       </AnimatePresence>
 
-      {/* Projector */}
       <motion.div
         animate={{
           opacity: transitioning ? 0 : 1,
@@ -151,7 +153,6 @@ export default function ProjectorScene({
         <ProjectorLens />
       </motion.div>
 
-      {/* Flicker */}
       {powerOn && (
         <motion.div
           className="pointer-events-none absolute inset-0 bg-white mix-blend-overlay"
@@ -168,7 +169,6 @@ export default function ProjectorScene({
         />
       )}
 
-      {/* Lens bloom */}
       {powerOn && (
         <motion.div
           className="pointer-events-none absolute left-[28%] top-1/2 h-64 w-64 -translate-y-1/2 rounded-full blur-3xl"
@@ -187,40 +187,25 @@ export default function ProjectorScene({
         />
       )}
 
-      {/* Vignette */}
       <motion.div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,transparent_42%,rgba(0,0,0,.88)_100%)]"
         animate={{
-          opacity: transitioning
-            ? 1
-            : powerOn
-            ? 0.55
-            : 0.85,
+          opacity: transitioning ? 1 : powerOn ? 0.55 : 0.85,
         }}
       />
 
-      {/* Countdown */}
       <AnimatePresence mode="wait">
         {showCountdown && !transitioning && <Countdown />}
       </AnimatePresence>
 
-      {/* Final projector flash */}
       <AnimatePresence>
         {transitioning && (
           <motion.div
             className="absolute inset-0 z-50 bg-white"
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: [0, 1, 1],
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            transition={{
-              duration: FLASH_DURATION / 1000,
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 1] }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.7 }}
           />
         )}
       </AnimatePresence>

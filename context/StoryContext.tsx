@@ -6,6 +6,7 @@ import {
   useContext,
   useMemo,
   useState,
+  useEffect,
   ReactNode,
 } from "react";
 
@@ -39,15 +40,27 @@ export function StoryProvider({
   const [isTransitioning, setIsTransitioning] =
     useState(false);
 
+  useEffect(() => {
+    console.log("Scene changed:", scene);
+  }, [scene]);
+
   const next = useCallback(() => {
     setScene((current) => {
       const index = STORY_SEQUENCE.indexOf(current);
 
+      console.log("Current:", current);
+      console.log("Index:", index);
+
       if (index >= STORY_SEQUENCE.length - 1) {
+        console.log("Already at last scene");
         return current;
       }
 
-      return STORY_SEQUENCE[index + 1];
+      const nextScene = STORY_SEQUENCE[index + 1];
+
+      console.log("Next scene:", nextScene);
+
+      return nextScene;
     });
   }, []);
 
@@ -75,10 +88,8 @@ export function StoryProvider({
   const value = useMemo(
     () => ({
       scene,
-
       isTransitioning,
       setIsTransitioning,
-
       next,
       previous,
       goTo,

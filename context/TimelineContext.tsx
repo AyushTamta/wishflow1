@@ -8,7 +8,7 @@ import {
 
 import type {
   RuntimeState,
-} from "@/runtime/types";
+} from "@/src/runtime/types";
 
 const TimelineContext =
   createContext<{

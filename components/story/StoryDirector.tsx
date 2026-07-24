@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { StoryScene } from "@/types/story";
@@ -8,7 +8,7 @@ import { useStory } from "@/hooks/useStory";
 
 import TransitionLayer from "@/components/effects/TransitionLayer";
 
-import MarineDriveHero from "@/components/MarineDriveHero";
+import MarineDriveHero from "@/components/hero/MarineDriveHero";
 import InvitationCard from "@/components/invitation/InvitationCard";
 import { ProjectorScene } from "@/components/projector";
 import { MemoryReel } from "@/components/memories";
@@ -27,17 +27,26 @@ export default function StoryDirector() {
     setIsTransitioning,
   } = useStory();
 
+  // Automatically move from INTRO to INVITATION
+  useEffect(() => {
+    if (scene !== StoryScene.INTRO) return;
+
+    const timer = setTimeout(() => {
+      next();
+    }, 3500);
+
+    return () => clearTimeout(timer);
+  }, [scene, next]);
+
   const transitionToNext = useCallback(async () => {
     if (isTransitioning) return;
 
     setIsTransitioning(true);
 
-    // Fade OUT
     await wait(350);
 
     next();
 
-    // Fade IN
     await wait(450);
 
     setIsTransitioning(false);
@@ -47,80 +56,64 @@ export default function StoryDirector() {
     setIsTransitioning,
   ]);
 
-  const renderScene = () => {
-    switch (scene) {
-      case StoryScene.INVITATION:
-        return (
-          <InvitationCard
-            visible
-            onBegin={transitionToNext}
-          />
-        );
+  const sceneMap = {
+    [StoryScene.INVITATION]: (
+      <InvitationCard
+        visible
+        onBegin={transitionToNext}
+      />
+    ),
 
-      case StoryScene.PROJECTOR:
-        return (
-          <ProjectorScene
-            active
-            onComplete={transitionToNext}
-          />
-        );
+    [StoryScene.PROJECTOR]: (
+      <ProjectorScene
+        active
+        onComplete={transitionToNext}
+      />
+    ),
 
-      case StoryScene.MEMORIES:
-        return (
-          <MemoryReel
-            active
-            onComplete={transitionToNext}
-          />
-        );
+    [StoryScene.MEMORIES]: (
+      <MemoryReel
+        active
+        onComplete={transitionToNext}
+      />
+    ),
 
-      case StoryScene.LETTER:
-        return (
-          <LetterScene
-            active
-            onComplete={transitionToNext}
-          />
-        );
+    [StoryScene.LETTER]: (
+      <LetterScene
+        active
+        onComplete={transitionToNext}
+      />
+    ),
 
-      case StoryScene.CREDITS:
-        return (
-          <CreditsScene
-            active
-            onReplay={reset}
-          />
-        );
-
-      default:
-        return null;
-    }
+    [StoryScene.CREDITS]: (
+      <CreditsScene
+        active
+        onReplay={reset}
+      />
+    ),
   };
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-black">
-      {/* Persistent Background */}
       <AnimatePresence mode="wait">
-        {(scene === StoryScene.INTRO ||
-          scene === StoryScene.INVITATION) && (
+        {scene === StoryScene.INTRO && (
           <motion.div
             key="marine-drive"
             className="absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{
-              duration: 1,
-            }}
+            transition={{ duration: 1 }}
           >
             <MarineDriveHero />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Cinematic Transition */}
       <TransitionLayer
         isVisible={isTransitioning}
       />
 
-      {/* Current Scene */}
       <AnimatePresence mode="wait">
         <motion.div
           key={scene}
@@ -141,7 +134,7 @@ export default function StoryDirector() {
             duration: 0.6,
           }}
         >
-          {renderScene()}
+          {sceneMap[scene] ?? null}
         </motion.div>
       </AnimatePresence>
     </div>

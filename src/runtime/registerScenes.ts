@@ -1,16 +1,16 @@
 import { sceneRegistry } from "./SceneRegistry";
 
-import InvitationScene from "@/components/scenes/InvitationScene";
-import ProjectorScene from "@/components/scenes/ProjectorScene";
-import MemoryReel from "@/components/scenes/MemoryReel";
+import InvitationCard from "@/components/invitation/InvitationCard";
+import ProjectorScene from "@/components/projector/ProjectorScene";
+import MemoryReel from "@/components/memories/MemoryReel";
 import ConstellationScene from "@/components/constellation/ConstellationScene";
-import LetterScene from "@/components/scenes/LetterScene";
-import CreditsScene from "@/components/scenes/CreditsScene";
+import LetterScene from "@/components/letter/LetterScene";
+import CreditsScene from "@/components/credits/CreditsScene";
 
 export function registerScenes() {
   sceneRegistry.register({
     id: "invitation",
-    component: InvitationScene,
+    component: InvitationCard,
   });
 
   sceneRegistry.register({
@@ -19,7 +19,7 @@ export function registerScenes() {
   });
 
   sceneRegistry.register({
-    id: "memoryReel",
+    id: "memories",
     component: MemoryReel,
   });
 

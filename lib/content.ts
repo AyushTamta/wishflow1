@@ -1,3 +1,8 @@
+export const hero = {
+  title: "A Story Worth Remembering",
+  name: "Ayush ❤️",
+};
+
 export const memories = [
   {
     image: "/images/memory1.jpg",

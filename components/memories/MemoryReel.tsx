@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { memories } from "@/lib/memories";
 import { ActiveStorySceneProps } from "@/types/scene";
 
+import { useScene } from "@/hooks/useScene";
+
 import MemoryFrame from "./MemoryFrame";
 import MemoryCaption from "./MemoryCaption";
 import ProgressDots from "./ProgressDots";
@@ -20,6 +22,8 @@ export default function MemoryReel({
   active,
   onComplete,
 }: ActiveStorySceneProps) {
+  useScene("memoryReel", active);
+
   const slides = useMemo(() => memories, []);
 
   const [current, setCurrent] = useState(0);
@@ -50,17 +54,15 @@ export default function MemoryReel({
   }, [slides]);
 
   /*
-   * Memory slideshow
+   * Slideshow
    */
   useEffect(() => {
     if (!active) return;
-
     if (completedRef.current) return;
+    if (!slides.length) return;
 
     const memory = slides[current];
-
-    const duration =
-      memory.duration ?? DEFAULT_DURATION;
+    const duration = memory.duration ?? DEFAULT_DURATION;
 
     const slideshowTimer = window.setTimeout(() => {
       setBurn(true);
@@ -68,9 +70,14 @@ export default function MemoryReel({
       const burnTimer = window.setTimeout(() => {
         setBurn(false);
 
+        // Last slide -> continue story
         if (current >= slides.length - 1) {
           completedRef.current = true;
-          onComplete();
+
+          window.setTimeout(() => {
+            onComplete();
+          }, 500);
+
           return;
         }
 
@@ -90,14 +97,20 @@ export default function MemoryReel({
 
   if (!active) return null;
 
+  if (!slides.length) {
+    return (
+      <section className="flex h-screen items-center justify-center bg-black text-white">
+        No memories found.
+      </section>
+    );
+  }
+
   const memory = slides[current];
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-6 py-10">
-      {/* Cinematic Background */}
       <CinematicBackground />
 
-      {/* Film Burn */}
       <FilmBurn show={burn} />
 
       <AnimatePresence mode="wait">
@@ -124,25 +137,21 @@ export default function MemoryReel({
             ease: "easeInOut",
           }}
         >
-          {/* Memory Frame */}
           <div className="relative w-full">
             <MemoryFrame
               image={memory.image}
               alt={memory.caption}
             />
 
-            {/* Projector Overlay */}
             <FilmOverlay />
           </div>
 
-          {/* Caption */}
           <MemoryCaption
             caption={memory.caption}
             location={memory.location}
             date={memory.date}
           />
 
-          {/* Progress */}
           <ProgressDots
             total={slides.length}
             current={current}

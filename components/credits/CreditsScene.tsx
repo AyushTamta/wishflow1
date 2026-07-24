@@ -6,19 +6,21 @@ import { motion } from "framer-motion";
 import CreditRoll from "./CreditRoll";
 import ReplayButton from "./ReplayButton";
 
-interface Props {
-  active: boolean;
-}
+import { ActiveStorySceneProps } from "@/types/scene";
+import { useScene } from "@/hooks/useScene";
 
 export default function CreditsScene({
   active,
-}: Props) {
+}: ActiveStorySceneProps) {
+  useScene("credits", active);
+
   const [finished, setFinished] = useState(false);
 
   if (!active) return null;
 
   return (
     <motion.section
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black"
       initial={{
         opacity: 0,
       }}
@@ -28,7 +30,6 @@ export default function CreditsScene({
       exit={{
         opacity: 0,
       }}
-      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black"
     >
       {/* Stars */}
       <div className="absolute inset-0">
@@ -54,27 +55,27 @@ export default function CreditsScene({
       <CreditRoll />
 
       <motion.div
+        className="absolute bottom-20"
         initial={{
           opacity: 0,
         }}
         animate={{
           opacity: finished ? 1 : 0,
         }}
-        className="absolute bottom-20"
       >
         <ReplayButton
-          onReplay={() => location.reload()}
+          onReplay={() => window.location.reload()}
         />
       </motion.div>
 
       <motion.div
-        onAnimationComplete={() => setFinished(true)}
         animate={{
           opacity: 1,
         }}
         transition={{
           duration: 43,
         }}
+        onAnimationComplete={() => setFinished(true)}
       />
     </motion.section>
   );

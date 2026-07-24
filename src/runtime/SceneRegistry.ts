@@ -1,10 +1,17 @@
 import type {
+  ComponentType,
+} from "react";
+
+import type {
   SceneDefinition,
   SceneId,
 } from "./scene";
 
 export class SceneRegistry {
-  private scenes = new Map<SceneId, SceneDefinition>();
+  private scenes = new Map<
+    SceneId,
+    SceneDefinition
+  >();
 
   register(scene: SceneDefinition) {
     this.scenes.set(scene.id, scene);
@@ -12,6 +19,12 @@ export class SceneRegistry {
 
   get(id: SceneId) {
     return this.scenes.get(id);
+  }
+
+  getComponent(
+    id: SceneId
+  ): ComponentType<any> | null {
+    return this.scenes.get(id)?.component ?? null;
   }
 
   getAll() {
@@ -27,4 +40,5 @@ export class SceneRegistry {
   }
 }
 
-export const sceneRegistry = new SceneRegistry();
+export const sceneRegistry =
+  new SceneRegistry();

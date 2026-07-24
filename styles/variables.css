@@ -1,0 +1,43 @@
+:root {
+  /* Colors */
+  --color-bg: #050608;
+
+  --color-surface: rgba(255, 255, 255, 0.05);
+  --color-surface-hover: rgba(255, 255, 255, 0.08);
+
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-strong: rgba(255, 255, 255, 0.18);
+
+  --color-text: #f8f8f8;
+  --color-muted: rgba(255, 255, 255, 0.72);
+
+  --color-gold: #e6c67a;
+  --color-gold-bright: #f4dc9d;
+
+  /* Radius */
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  /* Shadows */
+  --shadow-card:
+    0 20px 80px rgba(0, 0, 0, 0.35);
+
+  --shadow-glow:
+    0 0 80px rgba(230, 198, 122, 0.12);
+
+  /* Blur */
+  --blur-glass: 22px;
+
+  /* Timing */
+  --duration-fast: 180ms;
+  --duration-normal: 350ms;
+  --duration-slow: 700ms;
+
+  /* Easings */
+  --ease-standard: cubic-bezier(.4,0,.2,1);
+  --ease-premium: cubic-bezier(.22,1,.36,1);
+
+  /* Layout */
+  --container-width: 1280px;
+}

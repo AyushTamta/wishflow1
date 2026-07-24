@@ -1,0 +1,59 @@
+@keyframes shimmer {
+  0% {
+    transform: translateX(-140%);
+  }
+
+  100% {
+    transform: translateX(140%);
+  }
+}
+
+@keyframes float {
+  0%,100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes breathe {
+  0%,100% {
+    opacity: .9;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes spotlight {
+  0% {
+    transform: translateX(-10%);
+  }
+
+  50% {
+    transform: translateX(10%);
+  }
+
+  100% {
+    transform: translateX(-10%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 5s linear infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-breathe {
+  animation: breathe 5s ease-in-out infinite;
+}
+
+.animate-spotlight {
+  animation: spotlight 8s ease-in-out infinite;
+}

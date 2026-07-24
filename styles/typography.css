@@ -1,0 +1,17 @@
+.hero-title {
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.gold-text {
+  color: var(--color-gold);
+}
+
+.cinematic-title {
+  line-height: .95;
+  letter-spacing: .04em;
+}
+
+.body-muted {
+  color: var(--color-muted);
+}

@@ -1,0 +1,9 @@
+<Card
+    variant="glass"
+    hover
+    spotlight
+    shimmer
+    className="max-w-xl"
+>
+    ...
+</Card>

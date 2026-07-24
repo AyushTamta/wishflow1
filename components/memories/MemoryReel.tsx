@@ -1,94 +1,153 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { memories } from "@/lib/memories";
-import { MemoryReelProps } from "@/types/memory";
+import { ActiveStorySceneProps } from "@/types/scene";
 
 import MemoryFrame from "./MemoryFrame";
 import MemoryCaption from "./MemoryCaption";
 import ProgressDots from "./ProgressDots";
 import FilmOverlay from "./FilmOverlay";
 import FilmBurn from "./FilmBurn";
+import CinematicBackground from "./CinematicBackground";
+
+const DEFAULT_DURATION = 4500;
+const FILM_BURN_DURATION = 850;
 
 export default function MemoryReel({
   active,
   onComplete,
-}: MemoryReelProps) {
+}: ActiveStorySceneProps) {
   const slides = useMemo(() => memories, []);
 
   const [current, setCurrent] = useState(0);
   const [burn, setBurn] = useState(false);
 
+  const completedRef = useRef(false);
+
+  /*
+   * Reset whenever scene starts
+   */
   useEffect(() => {
     if (!active) return;
+
+    completedRef.current = false;
 
     setCurrent(0);
     setBurn(false);
   }, [active]);
 
+  /*
+   * Preload images
+   */
+  useEffect(() => {
+    slides.forEach((memory) => {
+      const img = new Image();
+      img.src = memory.image;
+    });
+  }, [slides]);
+
+  /*
+   * Memory slideshow
+   */
   useEffect(() => {
     if (!active) return;
 
-    if (current >= slides.length) return;
+    if (completedRef.current) return;
 
-    const currentMemory = slides[current];
+    const memory = slides[current];
 
-    const duration = currentMemory.duration ?? 4500;
+    const duration =
+      memory.duration ?? DEFAULT_DURATION;
 
-    const timer = setTimeout(() => {
+    const slideshowTimer = window.setTimeout(() => {
       setBurn(true);
 
-      setTimeout(() => {
+      const burnTimer = window.setTimeout(() => {
         setBurn(false);
 
-        if (current === slides.length - 1) {
+        if (current >= slides.length - 1) {
+          completedRef.current = true;
           onComplete();
-        } else {
-          setCurrent((prev) => prev + 1);
+          return;
         }
-      }, 850);
+
+        setCurrent((prev) => prev + 1);
+      }, FILM_BURN_DURATION);
+
+      return () => clearTimeout(burnTimer);
     }, duration);
 
-    return () => clearTimeout(timer);
-  }, [active, current, slides, onComplete]);
+    return () => clearTimeout(slideshowTimer);
+  }, [
+    active,
+    current,
+    slides,
+    onComplete,
+  ]);
 
   if (!active) return null;
 
   const memory = slides[current];
 
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-6">
+    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-6 py-10">
+      {/* Cinematic Background */}
+      <CinematicBackground />
+
+      {/* Film Burn */}
       <FilmBurn show={burn} />
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950 to-black" />
-
       <AnimatePresence mode="wait">
-        <div
+        <motion.div
           key={memory.id}
-          className="relative flex w-full max-w-6xl flex-col items-center"
+          className="relative z-20 flex w-full max-w-6xl flex-col items-center"
+          initial={{
+            opacity: 0,
+            y: 24,
+            scale: 0.98,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            scale: 1,
+          }}
+          exit={{
+            opacity: 0,
+            y: -24,
+            scale: 1.02,
+          }}
+          transition={{
+            duration: 0.8,
+            ease: "easeInOut",
+          }}
         >
+          {/* Memory Frame */}
           <div className="relative w-full">
             <MemoryFrame
               image={memory.image}
               alt={memory.caption}
             />
 
+            {/* Projector Overlay */}
             <FilmOverlay />
           </div>
 
+          {/* Caption */}
           <MemoryCaption
             caption={memory.caption}
             location={memory.location}
             date={memory.date}
           />
 
+          {/* Progress */}
           <ProgressDots
             total={slides.length}
             current={current}
           />
-        </div>
+        </motion.div>
       </AnimatePresence>
     </section>
   );

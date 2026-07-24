@@ -15,27 +15,26 @@ interface StoryContextType {
   scene: StoryScene;
 
   isTransitioning: boolean;
+  setIsTransitioning: React.Dispatch<React.SetStateAction<boolean>>;
 
   next: () => void;
   previous: () => void;
   goTo: (scene: StoryScene) => void;
   reset: () => void;
-
-  transitionToNext: () => Promise<void>;
-  transitionToPrevious: () => Promise<void>;
 }
 
 const StoryContext = createContext<StoryContextType | null>(null);
 
-const wait = (ms: number) =>
-  new Promise<void>((resolve) => setTimeout(resolve, ms));
-
-interface Props {
+interface StoryProviderProps {
   children: ReactNode;
 }
 
-export function StoryProvider({ children }: Props) {
-  const [scene, setScene] = useState(STORY_SEQUENCE[0]);
+export function StoryProvider({
+  children,
+}: StoryProviderProps) {
+  const [scene, setScene] = useState<StoryScene>(
+    STORY_SEQUENCE[0]
+  );
 
   const [isTransitioning, setIsTransitioning] =
     useState(false);
@@ -70,51 +69,20 @@ export function StoryProvider({ children }: Props) {
 
   const reset = useCallback(() => {
     setScene(STORY_SEQUENCE[0]);
+    setIsTransitioning(false);
   }, []);
-
-  const transitionToNext = useCallback(async () => {
-    if (isTransitioning) return;
-
-    setIsTransitioning(true);
-
-    // Play transition OUT
-    await wait(300);
-
-    next();
-
-    // Play transition IN
-    await wait(500);
-
-    setIsTransitioning(false);
-  }, [isTransitioning, next]);
-
-  const transitionToPrevious = useCallback(async () => {
-    if (isTransitioning) return;
-
-    setIsTransitioning(true);
-
-    await wait(300);
-
-    previous();
-
-    await wait(500);
-
-    setIsTransitioning(false);
-  }, [isTransitioning, previous]);
 
   const value = useMemo(
     () => ({
       scene,
 
       isTransitioning,
+      setIsTransitioning,
 
       next,
       previous,
       goTo,
       reset,
-
-      transitionToNext,
-      transitionToPrevious,
     }),
     [
       scene,
@@ -123,8 +91,6 @@ export function StoryProvider({ children }: Props) {
       previous,
       goTo,
       reset,
-      transitionToNext,
-      transitionToPrevious,
     ]
   );
 
@@ -140,7 +106,7 @@ export function useStoryContext() {
 
   if (!context) {
     throw new Error(
-      "useStoryContext must be used inside StoryProvider."
+      "useStoryContext must be used within StoryProvider."
     );
   }
 

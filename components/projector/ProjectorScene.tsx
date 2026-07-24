@@ -8,15 +8,17 @@ import ProjectorBeam from "./ProjectorBeam";
 import DustParticles from "./DustParticles";
 import Countdown from "./Countdown";
 
-interface ProjectorSceneProps {
-  active: boolean;
-  onComplete: () => void;
-}
+import { ActiveStorySceneProps } from "@/types/scene";
+
+const POWER_ON_DELAY = 500;
+const COUNTDOWN_DELAY = 2200;
+const TRANSITION_DELAY = 5200;
+const FLASH_DURATION = 700;
 
 export default function ProjectorScene({
   active,
   onComplete,
-}: ProjectorSceneProps) {
+}: ActiveStorySceneProps) {
   const [powerOn, setPowerOn] = useState(false);
   const [showCountdown, setShowCountdown] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
@@ -28,26 +30,32 @@ export default function ProjectorScene({
     setShowCountdown(false);
     setTransitioning(false);
 
-    const powerTimer = setTimeout(() => {
-      setPowerOn(true);
-    }, 500);
+    const timers: number[] = [];
 
-    const countdownTimer = setTimeout(() => {
-      setShowCountdown(true);
-    }, 2200);
+    timers.push(
+      window.setTimeout(() => {
+        setPowerOn(true);
+      }, POWER_ON_DELAY)
+    );
 
-    const transitionTimer = setTimeout(() => {
-      setTransitioning(true);
+    timers.push(
+      window.setTimeout(() => {
+        setShowCountdown(true);
+      }, COUNTDOWN_DELAY)
+    );
 
-      setTimeout(() => {
-        onComplete();
-      }, 700);
-    }, 5200);
+    timers.push(
+      window.setTimeout(() => {
+        setTransitioning(true);
+
+        window.setTimeout(() => {
+          onComplete();
+        }, FLASH_DURATION);
+      }, TRANSITION_DELAY)
+    );
 
     return () => {
-      clearTimeout(powerTimer);
-      clearTimeout(countdownTimer);
-      clearTimeout(transitionTimer);
+      timers.forEach(clearTimeout);
     };
   }, [active, onComplete]);
 
@@ -67,14 +75,40 @@ export default function ProjectorScene({
     >
       {/* Background */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-black to-zinc-900"
+        className="absolute inset-0"
         animate={{
+          background: powerOn
+            ? [
+                "radial-gradient(circle at center,#111,#000)",
+                "radial-gradient(circle at center,#1a1a1a,#000)",
+                "radial-gradient(circle at center,#111,#000)",
+              ]
+            : "radial-gradient(circle at center,#050505,#000)",
           filter: powerOn
             ? "brightness(1)"
-            : "brightness(.35)",
+            : "brightness(.3)",
         }}
         transition={{
-          duration: 1,
+          duration: 2,
+          repeat: powerOn ? Infinity : 0,
+        }}
+      />
+
+      {/* Ambient projector glow */}
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        animate={{
+          opacity: powerOn
+            ? [0.08, 0.18, 0.1]
+            : 0,
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+        }}
+        style={{
+          background:
+            "radial-gradient(circle at 25% 50%,rgba(255,210,120,.18),transparent 55%)",
         }}
       />
 
@@ -82,33 +116,20 @@ export default function ProjectorScene({
       <AnimatePresence>
         {powerOn && (
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0, scaleY: 0.9 }}
             animate={{
               opacity: transitioning ? 0 : 1,
+              scaleY: 1,
             }}
-            exit={{ opacity: 0 }}
+            exit={{
+              opacity: 0,
+            }}
             transition={{
               duration: 0.8,
             }}
+            className="absolute inset-0"
           >
             <ProjectorBeam />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Dust */}
-      <AnimatePresence>
-        {powerOn && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: transitioning ? 0 : 1,
-            }}
-            transition={{
-              delay: .3,
-              duration: .8,
-            }}
-          >
             <DustParticles />
           </motion.div>
         )}
@@ -118,74 +139,76 @@ export default function ProjectorScene({
       <motion.div
         animate={{
           opacity: transitioning ? 0 : 1,
-          scale: transitioning ? .98 : 1,
+          scale: transitioning ? 0.98 : powerOn ? [1, 1.01, 1] : 1,
+          y: powerOn ? [0, -2, 0] : 0,
         }}
         transition={{
-          duration: .7,
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
         }}
       >
         <ProjectorLens />
       </motion.div>
 
-      {/* Ambient Glow */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(255,220,120,.12),transparent_65%)]"
-        animate={{
-          opacity: powerOn
-            ? transitioning
-              ? 0
-              : [0.08, 0.15, 0.08]
-            : 0,
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-        }}
-      />
-
-      {/* Film Flicker */}
+      {/* Flicker */}
       {powerOn && (
         <motion.div
           className="pointer-events-none absolute inset-0 bg-white mix-blend-overlay"
           animate={{
             opacity: transitioning
               ? 0
-              : [0, .03, .06, .02, 0],
+              : [0.01, 0.05, 0.02, 0.04, 0.01],
           }}
           transition={{
-            duration: .12,
+            duration: 0.14,
             repeat: Infinity,
             ease: "linear",
           }}
         />
       )}
 
+      {/* Lens bloom */}
+      {powerOn && (
+        <motion.div
+          className="pointer-events-none absolute left-[28%] top-1/2 h-64 w-64 -translate-y-1/2 rounded-full blur-3xl"
+          animate={{
+            opacity: [0.15, 0.28, 0.18],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+          style={{
+            background:
+              "radial-gradient(circle,rgba(255,245,180,.35),transparent 70%)",
+          }}
+        />
+      )}
+
       {/* Vignette */}
       <motion.div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,transparent_45%,rgba(0,0,0,.85)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,transparent_42%,rgba(0,0,0,.88)_100%)]"
         animate={{
           opacity: transitioning
             ? 1
             : powerOn
-            ? .55
-            : .85,
-        }}
-        transition={{
-          duration: .7,
+            ? 0.55
+            : 0.85,
         }}
       />
 
       {/* Countdown */}
       <AnimatePresence mode="wait">
-        {showCountdown && !transitioning && (
-          <Countdown />
-        )}
+        {showCountdown && !transitioning && <Countdown />}
       </AnimatePresence>
 
-      {/* Final Flash */}
+      {/* Final projector flash */}
       <AnimatePresence>
         {transitioning && (
           <motion.div
+            className="absolute inset-0 z-50 bg-white"
             initial={{
               opacity: 0,
             }}
@@ -196,9 +219,8 @@ export default function ProjectorScene({
               opacity: 0,
             }}
             transition={{
-              duration: .7,
+              duration: FLASH_DURATION / 1000,
             }}
-            className="absolute inset-0 z-50 bg-white"
           />
         )}
       </AnimatePresence>

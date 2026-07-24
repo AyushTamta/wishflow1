@@ -1,18 +1,54 @@
 "use client";
 
 import { motion } from "framer-motion";
-import GrainOverlay from "./GrainOverlay";
 
 export default function FilmOverlay() {
   return (
     <>
-      <GrainOverlay />
+      {/* Animated Film Grain */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 opacity-[0.08] mix-blend-soft-light"
+        animate={{
+          backgroundPosition: [
+            "0px 0px",
+            "120px 80px",
+            "-80px 120px",
+            "0px 0px",
+          ],
+        }}
+        transition={{
+          duration: 0.35,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        style={{
+          backgroundImage: `
+            radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1.5px),
+            radial-gradient(circle, rgba(255,255,255,0.5) 0.8px, transparent 1.2px)
+          `,
+          backgroundSize: "90px 90px, 140px 140px",
+        }}
+      />
 
-      {/* Projector brightness flicker */}
+      {/* Projector Flicker */}
       <motion.div
         className="pointer-events-none absolute inset-0 bg-white"
         animate={{
-          opacity: [0.03, 0.07, 0.02, 0.05, 0.03],
+          opacity: [0.015, 0.04, 0.02, 0.035, 0.018],
+        }}
+        transition={{
+          duration: 0.12,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      />
+
+      {/* Gate Weave */}
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        animate={{
+          x: [0, -1, 1, 0],
+          y: [0, 1, -1, 0],
         }}
         transition={{
           duration: 0.18,
@@ -21,33 +57,65 @@ export default function FilmOverlay() {
         }}
       />
 
-      {/* Vignette */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,transparent_58%,rgba(0,0,0,.75)_100%)]" />
-
-      {/* Vertical scratches */}
+      {/* Vertical Scratches */}
       <motion.div
+        className="pointer-events-none absolute inset-0 opacity-20"
         animate={{
-          x: ["-4%", "104%"],
+          backgroundPositionY: [
+            "0%",
+            "100%",
+          ],
         }}
         transition={{
-          duration: 3,
+          duration: 1.8,
           repeat: Infinity,
           ease: "linear",
         }}
-        className="pointer-events-none absolute inset-y-0 w-[2px] bg-white/10 blur-[1px]"
+        style={{
+          backgroundImage: `
+            linear-gradient(
+              to bottom,
+              transparent,
+              rgba(255,255,255,.12),
+              transparent
+            )
+          `,
+          backgroundRepeat: "repeat-x",
+          backgroundSize: "180px 100%",
+        }}
       />
 
+      {/* Dust */}
       <motion.div
+        className="pointer-events-none absolute inset-0"
         animate={{
-          x: ["110%", "-10%"],
+          y: [0, 60],
         }}
         transition={{
-          duration: 5,
+          duration: 8,
           repeat: Infinity,
           ease: "linear",
         }}
-        className="pointer-events-none absolute inset-y-0 w-px bg-white/10"
-      />
+      >
+        {Array.from({ length: 28 }).map((_, i) => (
+          <span
+            key={i}
+            className="absolute rounded-full bg-white/20"
+            style={{
+              width: `${Math.random() * 2 + 1}px`,
+              height: `${Math.random() * 2 + 1}px`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+          />
+        ))}
+      </motion.div>
+
+      {/* Edge vignette */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,transparent_55%,rgba(0,0,0,.45)_100%)]" />
+
+      {/* Warm projector tint */}
+      <div className="pointer-events-none absolute inset-0 bg-amber-100/5 mix-blend-screen" />
     </>
   );
 }

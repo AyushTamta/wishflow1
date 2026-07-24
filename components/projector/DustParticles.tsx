@@ -1,50 +1,46 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const particles = Array.from({ length: 60 });
+import { useMemo } from "react";
 
 export default function DustParticles() {
-  return (
-    <>
-      {particles.map((_, index) => {
-        const left = 260 + Math.random() * 900;
-        const top = 180 + Math.random() * 400;
-        const size = Math.random() * 3 + 1;
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 40 }).map((_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        size: Math.random() * 3 + 1,
+        duration: Math.random() * 8 + 8,
+        delay: Math.random() * 6,
+      })),
+    []
+  );
 
-        return (
-          <motion.span
-            key={index}
-            style={{
-              left,
-              top,
-              width: size,
-              height: size,
-            }}
-            className="
-              absolute
-              rounded-full
-              bg-white/60
-              blur-[1px]
-            "
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              y: [0, -140],
-              x: [0, 15, -12, 8],
-              opacity: [0, 0.25, 0.6, 0.2, 0],
-              scale: [1, 1.4, 0.9],
-            }}
-            transition={{
-              duration: 6 + Math.random() * 8,
-              delay: Math.random() * 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        );
-      })}
-    </>
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {particles.map((particle) => (
+        <motion.span
+          key={particle.id}
+          className="absolute rounded-full bg-white/30"
+          style={{
+            left: `${particle.left}%`,
+            top: `${particle.top}%`,
+            width: particle.size,
+            height: particle.size,
+          }}
+          animate={{
+            y: [-40, 40],
+            opacity: [0, 0.8, 0],
+          }}
+          transition={{
+            duration: particle.duration,
+            delay: particle.delay,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      ))}
+    </div>
   );
 }

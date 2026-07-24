@@ -7,7 +7,7 @@ export enum StoryScene {
   CREDITS = "CREDITS",
 }
 
-export const STORY_SEQUENCE = [
+export const STORY_SEQUENCE: StoryScene[] = [
   StoryScene.INTRO,
   StoryScene.INVITATION,
   StoryScene.PROJECTOR,

@@ -22,12 +22,14 @@ export default function MemoryFrame({
       {/* 16:9 Frame */}
       <div className="relative aspect-video">
         <Image
-          src={image}
-          alt={alt}
-          fill
-          priority
-          className="object-cover"
-        />
+  src={image}
+  alt={alt}
+  fill
+  priority
+  sizes="(max-width:768px)100vw,1200px"
+  className="object-cover select-none"
+  draggable={false}
+/>
 
         {/* Vignette */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,transparent_55%,rgba(0,0,0,0.7)_100%)]" />

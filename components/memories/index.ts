@@ -1,3 +1,4 @@
+export { default as MemoryReel } from "./MemoryReel";
 export { default as MemoryFrame } from "./MemoryFrame";
 export { default as MemoryCaption } from "./MemoryCaption";
 export { default as ProgressDots } from "./ProgressDots";

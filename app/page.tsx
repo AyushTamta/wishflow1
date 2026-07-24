@@ -10,30 +10,32 @@ import ProjectorBeam from "@/components/theatre/ProjectorBeam";
 import MarineDriveHero from "@/components/hero/MarineDriveHero";
 import MusicPlayer from "@/components/music/MusicPlayer";
 
+import { MemorySection } from "@/components/memories";
+
 export default function Home() {
   const [openCurtains, setOpenCurtains] = useState(false);
 
   return (
-    <main className="relative h-screen w-full overflow-hidden bg-black text-white">
-      {/* Film Grain */}
-      <FilmGrain />
+    <main className="relative min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Theatre Intro */}
+      <div className="relative h-screen overflow-hidden">
+        <FilmGrain />
 
-      {/* Projector Beam */}
-      <ProjectorBeam />
+        <ProjectorBeam />
 
-      {/* Hero Scene */}
-      <MarineDriveHero />
+        <MarineDriveHero />
 
-      {/* Theatre Countdown */}
-      {!openCurtains && (
-        <Countdown onComplete={() => setOpenCurtains(true)} />
-      )}
+        {!openCurtains && (
+          <Countdown onComplete={() => setOpenCurtains(true)} />
+        )}
 
-      {/* Opening Curtains */}
-      <Curtains open={openCurtains} />
+        <Curtains open={openCurtains} />
 
-      {/* Background Music */}
-      <MusicPlayer />
+        <MusicPlayer />
+      </div>
+
+      {/* Story Begins */}
+      <MemorySection />
     </main>
   );
 }

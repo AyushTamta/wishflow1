@@ -1,39 +1,30 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { STORY_SEQUENCE, StoryScene } from "@/types/story";
+import { useState } from "react";
+import { StoryScene, STORY_SEQUENCE } from "@/types/story";
 
 export function useStory() {
-  const [scene, setScene] = useState<StoryScene>(StoryScene.INTRO);
+  const [scene, setScene] = useState(StoryScene.INVITATION);
 
-  const index = useMemo(
-    () => STORY_SEQUENCE.indexOf(scene),
-    [scene]
-  );
+  const next = () => {
+    const currentIndex = STORY_SEQUENCE.indexOf(scene);
 
-  const next = useCallback(() => {
-    if (index >= STORY_SEQUENCE.length - 1) return;
+    if (currentIndex < STORY_SEQUENCE.length - 1) {
+      setScene(STORY_SEQUENCE[currentIndex + 1]);
+    }
+  };
 
-    setScene(STORY_SEQUENCE[index + 1]);
-  }, [index]);
+  const previous = () => {
+    const currentIndex = STORY_SEQUENCE.indexOf(scene);
 
-  const previous = useCallback(() => {
-    if (index <= 0) return;
-
-    setScene(STORY_SEQUENCE[index - 1]);
-  }, [index]);
-
-  const goTo = useCallback((scene: StoryScene) => {
-    setScene(scene);
-  }, []);
+    if (currentIndex > 0) {
+      setScene(STORY_SEQUENCE[currentIndex - 1]);
+    }
+  };
 
   return {
     scene,
     next,
     previous,
-    goTo,
-    isFirst: index === 0,
-    isLast: index === STORY_SEQUENCE.length - 1,
-    progress: index / (STORY_SEQUENCE.length - 1),
   };
 }

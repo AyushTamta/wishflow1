@@ -14,4 +14,4 @@ export const STORY_SEQUENCE = [
   StoryScene.MEMORIES,
   StoryScene.LETTER,
   StoryScene.CREDITS,
-] as const;
+];

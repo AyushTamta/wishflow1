@@ -15,6 +15,8 @@ import FilmOverlay from "./FilmOverlay";
 import FilmBurn from "./FilmBurn";
 import CinematicBackground from "./CinematicBackground";
 
+import FilmReelScene from "@/components/filmReel/FilmReelScene";
+
 const DEFAULT_DURATION = 4500;
 const FILM_BURN_DURATION = 850;
 
@@ -28,6 +30,7 @@ export default function MemoryReel({
 
   const [current, setCurrent] = useState(0);
   const [burn, setBurn] = useState(false);
+  const [showFilmReel, setShowFilmReel] = useState(false);
 
   const completedRef = useRef(false);
 
@@ -41,6 +44,7 @@ export default function MemoryReel({
 
     setCurrent(0);
     setBurn(false);
+    setShowFilmReel(false);
   }, [active]);
 
   /*
@@ -60,6 +64,7 @@ export default function MemoryReel({
     if (!active) return;
     if (completedRef.current) return;
     if (!slides.length) return;
+    if (showFilmReel) return;
 
     const memory = slides[current];
     const duration = memory.duration ?? DEFAULT_DURATION;
@@ -70,14 +75,10 @@ export default function MemoryReel({
       const burnTimer = window.setTimeout(() => {
         setBurn(false);
 
-        // Last slide -> continue story
+        // Last slide -> show interactive film reel
         if (current >= slides.length - 1) {
           completedRef.current = true;
-
-          window.setTimeout(() => {
-            onComplete();
-          }, 500);
-
+          setShowFilmReel(true);
           return;
         }
 
@@ -93,6 +94,7 @@ export default function MemoryReel({
     current,
     slides,
     onComplete,
+    showFilmReel,
   ]);
 
   if (!active) return null;
@@ -102,6 +104,16 @@ export default function MemoryReel({
       <section className="flex h-screen items-center justify-center bg-black text-white">
         No memories found.
       </section>
+    );
+  }
+
+  if (showFilmReel) {
+    return (
+      <FilmReelScene
+        active
+        photos={slides.map((memory) => memory.image)}
+        onComplete={onComplete}
+      />
     );
   }
 

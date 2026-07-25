@@ -1,4 +1,4 @@
-export { default as MarineDriveHero } from "./MarineDriveHero";
+export { default as MarineDriveHero } from "./MarineDriveHero.js";
 export { default as Sky } from "./Sky";
 export { default as Moon } from "./Moon";
 export { default as Ocean } from "./Ocean";

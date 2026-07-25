@@ -1,72 +1,62 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
-import Sky from "./Sky";
-import Stars from "./Stars";
-import Moon from "./Moon";
-import MoonReflection from "./MoonReflection";
-import Ocean from "./Ocean";
-import Waves from "./Waves";
-import Skyline from "./Skyline";
-import HeroTitle from "./HeroTitle";
-import Glow from "../ui/Glow";
-import useParallax from "@/hooks/useParallax";
+import HeroSequence from "./HeroSequence";
+import FloatingParticles from "./FloatingParticles";
+import FilmGrain from "./FilmGrain";
 
 export default function MarineDriveHero() {
-  const { x, y } = useParallax(20);
-
   return (
-    <section className="absolute inset-0 overflow-hidden bg-[#050814]">
+    <motion.section
+      className="absolute inset-0 overflow-hidden bg-black"
+      initial={{ scale: 1 }}
+      animate={{
+        scale: 1.08,
+        x: -20,
+        y: -10,
+      }}
+      transition={{
+        duration: 28,
+        ease: "linear",
+      }}
+    >
+      {/* Background Image */}
+      <Image
+        src="/images/marine-drive-hero.png"
+        alt="Moonlit Marine Drive"
+        fill
+        priority
+        className="object-cover object-center select-none"
+      />
 
-      {/* Sky */}
-      <Sky />
+      {/* Ocean glow */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#02111d]/60 via-transparent to-[#04101d]/20" />
 
-      {/* Stars */}
-      <motion.div
+      {/* Moon glow */}
+      <div className="absolute left-16 top-10 h-80 w-80 rounded-full bg-sky-300/10 blur-3xl" />
+
+      {/* Vignette */}
+      <div
+        className="absolute inset-0"
         style={{
-          x,
-          y,
+          background:
+            "radial-gradient(circle at center, transparent 28%, rgba(0,0,0,.25) 60%, rgba(0,0,0,.82) 100%)",
         }}
-      >
-        <Stars />
-      </motion.div>
+      />
 
-      {/* Moon */}
-      <motion.div
-        style={{
-          x: x.get() * 0.4,
-          y: y.get() * 0.4,
-        }}
-      >
-        <Moon />
-      </motion.div>
+      {/* Top shadow */}
+      <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-black/45 to-transparent" />
 
-      <Glow className="left-1/2 top-20 h-72 w-72 -translate-x-1/2 bg-sky-300/20" />
+      {/* Bottom shadow */}
+      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent" />
 
-      {/* Skyline */}
-      <motion.div
-        style={{
-          x: x.get() * 0.2,
-        }}
-      >
-        <Skyline />
-      </motion.div>
+      <FloatingParticles />
 
-      {/* Ocean */}
-      <motion.div
-        style={{
-          x: x.get() * 0.1,
-        }}
-      >
-        <Ocean />
-      </motion.div>
+      <FilmGrain />
 
-      <MoonReflection />
-
-      <Waves />
-
-      <HeroTitle />
-    </section>
+      <HeroSequence />
+    </motion.section>
   );
 }

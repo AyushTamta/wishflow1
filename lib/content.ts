@@ -1,6 +1,6 @@
 export const hero = {
-  title: "A Story Worth Remembering",
-  name: "Ayush ❤️",
+  title: "Happy Birthday Ambay",
+  name: "A Marine Drive birthday film",
   music: "/audio/bgm.mp3",
 };
 

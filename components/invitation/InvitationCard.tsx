@@ -97,6 +97,7 @@ export default function InvitationCard({
 
           {curtainsOpen && (
   <motion.div
+    className="relative z-50"
     initial={{
       opacity: 0,
       y: 60,

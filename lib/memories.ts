@@ -8,7 +8,6 @@ export const memories: Memory[] = [
     image: "/images/memory1.jpg",
     caption: "Every story has a beginning.",
     location: "Marine Drive",
-    date: "July 2026",
     duration: 4500,
   },
   {

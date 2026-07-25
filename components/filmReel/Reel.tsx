@@ -8,10 +8,10 @@ interface ReelProps {
   progress: MotionValue<number>;
 }
 
-const REEL_SIZE = 1130;
+const REEL_SIZE = 980;
 
 // Smaller value = faster rotation
-const PIXELS_PER_REVOLUTION = 420;
+const PIXELS_PER_REVOLUTION = 620;
 
 export default function Reel({
   side,
@@ -34,6 +34,7 @@ export default function Reel({
         rotate,
         width: REEL_SIZE,
         height: REEL_SIZE,
+        willChange: "transform",
       }}
       className="relative pointer-events-none select-none"
     >
@@ -54,6 +55,7 @@ export default function Reel({
         fill
         priority
         draggable={false}
+        sizes="980px"
         className="object-contain"
       />
 

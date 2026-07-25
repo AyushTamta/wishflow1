@@ -1,11 +1,13 @@
 "use client";
 
 import {
+  AnimatePresence,
   animate,
   motion,
   useMotionValue,
   useSpring,
 } from "framer-motion";
+import { FastForward, Pause, Play, Rabbit, Snail } from "lucide-react";
 
 import {
   useEffect,
@@ -27,16 +29,17 @@ interface FilmStripProps {
   onComplete?: () => void;
 }
 
-const FRAME_WIDTH = 360;
-const FRAME_HEIGHT = 500;
+const FRAME_WIDTH = 430;
+const FRAME_HEIGHT = 580;
 const GAP = 8;
 
-const COPIES = 11;
+const COPIES = 5;
 
-const DEFAULT_SPEED = 3;
+const DEFAULT_SPEED = 2.4;
 
 export default function FilmStrip({
   photos,
+  onComplete,
 }: FilmStripProps) {
 
   const containerRef =
@@ -45,8 +48,17 @@ export default function FilmStrip({
   const autoScroll =
     useRef(true);
 
+  const lastFrameTime =
+    useRef<number | null>(null);
+
   const [speed, setSpeed] =
     useState(DEFAULT_SPEED);
+
+  const [playing, setPlaying] =
+    useState(true);
+
+  const [sealing, setSealing] =
+    useState(false);
 
   const loopPhotos = useMemo(
     () =>
@@ -74,9 +86,9 @@ export default function FilmStrip({
 
   const springX =
     useSpring(x, {
-      stiffness: 120,
-      damping: 22,
-      mass: 0.9,
+      stiffness: 180,
+      damping: 34,
+      mass: 0.65,
     });
 
       useEffect(() => {
@@ -120,6 +132,25 @@ export default function FilmStrip({
   ]);
 
   useEffect(() => {
+    photos.forEach((photo) => {
+      const img = new Image();
+      img.src = photo;
+    });
+  }, [photos]);
+
+  useEffect(() => {
+    if (!sealing || !onComplete) return;
+
+    autoScroll.current = false;
+
+    const timer = window.setTimeout(() => {
+      onComplete();
+    }, 950);
+
+    return () => window.clearTimeout(timer);
+  }, [sealing, onComplete]);
+
+  useEffect(() => {
 
     const node =
       containerRef.current;
@@ -135,8 +166,7 @@ export default function FilmStrip({
 
       x.set(
         x.get()
-          - e.deltaY
-          - e.deltaX
+          - (e.deltaY + e.deltaX) * 0.65
       );
 
     };
@@ -164,14 +194,22 @@ export default function FilmStrip({
 
     const animateStrip =
       () => {
+        const now = performance.now();
+        const delta =
+          lastFrameTime.current === null
+            ? 16.67
+            : Math.min(now - lastFrameTime.current, 34);
+
+        lastFrameTime.current = now;
 
         if (
-          autoScroll.current
+          autoScroll.current &&
+          playing
         ) {
 
           x.set(
             x.get() -
-              speed * 4
+              speed * delta * 0.18
           );
 
         }
@@ -183,16 +221,20 @@ export default function FilmStrip({
 
       };
 
+    lastFrameTime.current = null;
     animateStrip();
 
-    return () =>
+    return () => {
+      lastFrameTime.current = null;
       cancelAnimationFrame(
         frame
       );
+    };
 
   }, [
     speed,
     x,
+    playing,
   ]);
 
     return (
@@ -271,7 +313,7 @@ export default function FilmStrip({
         }}
         onDragEnd={(_, info) => {
 
-          autoScroll.current = true;
+          autoScroll.current = playing;
 
           animate(
             x,
@@ -356,7 +398,7 @@ export default function FilmStrip({
 
                     <FilmWindow
                       image={photo}
-                      index={index}
+                      index={index % photos.length}
                     />
 
                   </div>
@@ -389,43 +431,32 @@ export default function FilmStrip({
         className="
           absolute
           left-1/2
-          bottom-12
+          bottom-8
           z-[120]
           -translate-x-1/2
-          rounded-2xl
+          flex
+          items-center
+          gap-5
+          rounded-full
           border
           border-white/10
           bg-black/75
-          px-6
-          py-4
+          px-5
+          py-3
           backdrop-blur-xl
           shadow-[0_20px_60px_rgba(0,0,0,.45)]
         "
       >
-
-        <div
-          className="
-            mb-3
-            text-center
-            text-[10px]
-            uppercase
-            tracking-[0.45em]
-            text-neutral-300
-          "
-        >
-          Reel Speed
-        </div>
-
         <div className="flex items-center gap-4">
 
           <span className="text-xs text-neutral-500">
-            Slow
+            <Snail size={16} />
           </span>
 
           <input
             type="range"
-            min={0}
-            max={10}
+            min={0.5}
+            max={6}
             step={0.25}
             value={speed}
             onChange={(e) =>
@@ -435,18 +466,128 @@ export default function FilmStrip({
             }
             className="
               w-72
+              max-w-[34vw]
               cursor-pointer
               accent-yellow-400
             "
           />
 
-          <span className="text-xs text-neutral-500">
-            Fast
+          <span className="flex items-center gap-2 text-xs text-neutral-400">
+            <Rabbit size={16} />
           </span>
 
         </div>
 
+        <button
+          type="button"
+          onClick={() => {
+            const nextPlaying = !playing;
+            setPlaying(nextPlaying);
+            autoScroll.current = nextPlaying;
+          }}
+          className="
+            flex
+            h-12
+            w-12
+            items-center
+            justify-center
+            rounded-full
+            border
+            border-[#E6C67A]/40
+            bg-[#E6C67A]/10
+            text-[#E6C67A]
+            transition
+            hover:border-[#E6C67A]/80
+            hover:bg-[#E6C67A]/20
+          "
+          aria-label={playing ? "Pause reel" : "Play reel"}
+        >
+          {playing ? <Pause size={18} /> : <Play size={18} />}
+        </button>
+
+        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs uppercase tracking-[0.18em] text-neutral-300">
+          <FastForward size={14} />
+          {speed.toFixed(2)}x
+        </div>
+
+        {onComplete && (
+          <motion.button
+            type="button"
+            onClick={() => setSealing(true)}
+            disabled={sealing}
+            className="
+              rounded-full
+              border
+              border-[#E6C67A]/40
+              bg-[linear-gradient(135deg,rgba(230,198,122,.18),rgba(255,255,255,.04))]
+              px-6
+              py-3
+              text-xs
+              font-medium
+              uppercase
+              tracking-[0.22em]
+              text-[#E6C67A]
+              shadow-[0_0_30px_rgba(230,198,122,.14)]
+              transition
+              hover:border-[#E6C67A]/80
+              hover:bg-[#E6C67A]/15
+              disabled:cursor-wait
+              disabled:opacity-80
+            "
+            whileHover={{
+              scale: 1.04,
+              y: -2,
+            }}
+            whileTap={{
+              scale: 0.97,
+            }}
+          >
+            {sealing ? "Opening..." : "Seal The Reel"}
+          </motion.button>
+        )}
+
       </div>
+
+      <AnimatePresence>
+        {sealing && (
+          <motion.div
+            className="pointer-events-none absolute inset-0 z-[180] flex items-center justify-center bg-black/20 backdrop-blur-[1px]"
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+          >
+            <motion.div
+              className="relative flex h-44 w-72 items-center justify-center rounded-[6px] border border-[#E6C67A]/50 bg-[linear-gradient(145deg,#f7ddb0,#b98342_48%,#4a2310)] shadow-[0_0_90px_rgba(230,198,122,.45)]"
+              initial={{
+                scale: 0.65,
+                rotate: -8,
+                y: 80,
+              }}
+              animate={{
+                scale: [0.65, 1.05, 0.92],
+                rotate: [-8, 3, 0],
+                y: [80, 0, -12],
+              }}
+              transition={{
+                duration: 0.9,
+                ease: "easeInOut",
+              }}
+            >
+              <div className="absolute inset-x-0 top-1/2 h-px bg-black/25" />
+              <div className="absolute left-0 top-0 h-full w-full bg-[linear-gradient(32deg,transparent_49%,rgba(255,255,255,.35)_50%,transparent_51%)]" />
+              <span className="relative rounded-full border border-[#3b1608]/30 bg-[#8f1d16] px-5 py-3 text-xs uppercase tracking-[0.28em] text-yellow-100 shadow-[0_0_30px_rgba(143,29,22,.55)]">
+                For Ambay
+              </span>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
 
             {/* Cinematic Overlay */}
@@ -510,16 +651,6 @@ export default function FilmStrip({
       </div>
 
             {/* Auto-scroll pause on hover */}
-
-      <div
-        className="absolute inset-0 z-[80]"
-        onMouseEnter={() => {
-          autoScroll.current = false;
-        }}
-        onMouseLeave={() => {
-          autoScroll.current = true;
-        }}
-      />
 
       {/* Ambient Glow */}
 

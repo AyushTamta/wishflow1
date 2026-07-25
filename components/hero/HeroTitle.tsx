@@ -15,7 +15,7 @@ export default function HeroTitle() {
         }}
         className="mb-6 uppercase tracking-[0.4em] text-white/70"
       >
-        Every great story begins with a single frame
+        A birthday wish from Marine Drive
       </motion.p>
 
       <motion.h1
@@ -31,7 +31,7 @@ export default function HeroTitle() {
           delay: 1.2,
           duration: 1,
         }}
-        className="text-6xl md:text-8xl font-black"
+        className="text-5xl font-black leading-tight md:text-8xl"
       >
         {hero.title}
       </motion.h1>
@@ -49,7 +49,7 @@ export default function HeroTitle() {
           delay: 1.8,
           duration: 1,
         }}
-        className="mt-6 text-3xl md:text-5xl text-yellow-300 font-light"
+        className="mt-6 text-2xl font-light text-yellow-300 md:text-5xl"
       >
         {hero.name}
       </motion.h2>

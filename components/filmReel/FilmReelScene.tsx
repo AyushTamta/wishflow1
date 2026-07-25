@@ -252,48 +252,6 @@ export default function FilmReelScene({
           {/* cinema frame */}
           <div className="pointer-events-none absolute inset-0 border-[14px] border-black shadow-[0_0_120px_black_inset]" />
 
-          {/* title */}
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: -20,
-            }}
-            animate={{
-              opacity: showStrip ? 1 : 0,
-              y: showStrip ? 0 : -20,
-            }}
-            transition={{
-              delay: 0.3,
-              duration: 0.8,
-            }}
-            className="absolute left-1/2 top-10 z-40 -translate-x-1/2"
-          >
-            <p className="text-xs uppercase tracking-[0.8em] text-neutral-400">
-              Kodak Memory Reel
-            </p>
-
-            <h2 className="mt-3 text-center text-3xl font-semibold text-white">
-              Every Frame Has A Story
-            </h2>
-          </motion.div>
-
-          {/* footer hint */}
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: showStrip ? 1 : 0,
-            }}
-            transition={{
-              delay: 1,
-            }}
-            className="pointer-events-none absolute bottom-8 left-1/2 z-40 -translate-x-1/2 rounded-full border border-neutral-700 bg-black/40 px-5 py-2 backdrop-blur-md"
-          >
-            <span className="text-[10px] uppercase tracking-[0.45em] text-neutral-300">
-              Drag • Scroll • Swipe
-            </span>
-          </motion.div>
         </motion.section>
       )}
     </AnimatePresence>

@@ -14,16 +14,16 @@ export default function FilmWindow({
 }: FilmWindowProps) {
   return (
     <motion.div
-      className="relative h-[320px] w-[240px] flex-shrink-0"
+      className="relative h-[390px] w-[320px] flex-shrink-0"
       whileHover={{
-        scale: 1.045,
-        y: -6,
-        zIndex: 50,
+        scale: 1.12,
+        y: -18,
+        zIndex: 80,
       }}
       transition={{
         type: "spring",
-        stiffness: 260,
-        damping: 22,
+        stiffness: 240,
+        damping: 18,
       }}
     >
       {/* Film Frame */}
@@ -59,7 +59,7 @@ export default function FilmWindow({
             src={image}
             alt={`Memory ${index + 1}`}
             fill
-            sizes="240px"
+            sizes="320px"
             className="object-cover"
           />
         </motion.div>

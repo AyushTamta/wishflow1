@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Play, Pause, Volume2 } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { hero } from "@/lib/content";
 
 export default function MusicPlayer() {
@@ -13,6 +13,31 @@ export default function MusicPlayer() {
 
     audioRef.current.volume = 0.35;
   }, []);
+
+  useEffect(() => {
+    const startAudio = async () => {
+      if (!audioRef.current || playing) return;
+
+      try {
+        await audioRef.current.play();
+        setPlaying(true);
+      } catch {
+        setPlaying(false);
+      }
+    };
+
+    window.addEventListener("pointerdown", startAudio, {
+      once: true,
+    });
+    window.addEventListener("keydown", startAudio, {
+      once: true,
+    });
+
+    return () => {
+      window.removeEventListener("pointerdown", startAudio);
+      window.removeEventListener("keydown", startAudio);
+    };
+  }, [playing]);
 
   const toggle = async () => {
     if (!audioRef.current) return;
@@ -34,7 +59,8 @@ export default function MusicPlayer() {
 
       <button
         onClick={toggle}
-        className="fixed bottom-8 right-8 z-[999] flex h-14 w-14 items-center justify-center rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:scale-105 transition"
+        aria-label={playing ? "Pause background music" : "Play background music"}
+        className="fixed bottom-8 right-8 z-[999] flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-black/45 text-white backdrop-blur-xl transition hover:scale-105 hover:border-[#E6C67A]/60"
       >
         {playing ? <Pause size={22} /> : <Play size={22} />}
       </button>

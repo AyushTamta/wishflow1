@@ -27,6 +27,7 @@ export default function MemoryReel({
   useScene("memoryReel", active);
 
   const slides = useMemo(() => memories, []);
+  const previewSlides = useMemo(() => slides.slice(0, 6), [slides]);
 
   const [current, setCurrent] = useState(0);
   const [burn, setBurn] = useState(false);
@@ -63,10 +64,10 @@ export default function MemoryReel({
   useEffect(() => {
     if (!active) return;
     if (completedRef.current) return;
-    if (!slides.length) return;
+    if (!previewSlides.length) return;
     if (showFilmReel) return;
 
-    const memory = slides[current];
+    const memory = previewSlides[current];
     const duration = memory.duration ?? DEFAULT_DURATION;
 
     const slideshowTimer = window.setTimeout(() => {
@@ -76,7 +77,7 @@ export default function MemoryReel({
         setBurn(false);
 
         // Last slide -> show interactive film reel
-        if (current >= slides.length - 1) {
+        if (current >= previewSlides.length - 1) {
           completedRef.current = true;
           setShowFilmReel(true);
           return;
@@ -92,7 +93,7 @@ export default function MemoryReel({
   }, [
     active,
     current,
-    slides,
+    previewSlides,
     onComplete,
     showFilmReel,
   ]);
@@ -117,7 +118,7 @@ export default function MemoryReel({
     );
   }
 
-  const memory = slides[current];
+  const memory = previewSlides[current];
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-6 py-10">
@@ -165,7 +166,7 @@ export default function MemoryReel({
           />
 
           <ProgressDots
-            total={slides.length}
+            total={previewSlides.length}
             current={current}
           />
         </motion.div>

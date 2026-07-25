@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-import FilmBurn from "./FilmBurn";
+
 import ProjectorFlash from "./ProjectorFlash";
 import Vignette from "./Vignette";
 
@@ -44,9 +44,7 @@ export default function SceneTransition({
             <ProjectorFlash active />
           )}
 
-          {type === "film" && (
-            <FilmBurn active />
-          )}
+        
 
           {type === "fade" && (
             <motion.div

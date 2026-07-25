@@ -355,9 +355,8 @@ export default function FilmStrip({
                     {/* Actual Film Window */}
 
                     <FilmWindow
-                      src={photo}
-                      width={FRAME_WIDTH}
-                      height={FRAME_HEIGHT}
+                      image={photo}
+                      index={index}
                     />
 
                   </div>

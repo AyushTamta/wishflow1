@@ -19,7 +19,7 @@ export function registerScenes() {
   });
 
   sceneRegistry.register({
-    id: "memories",
+    id: "memoryReel",
     component: MemoryReel,
   });
 

@@ -1,12 +1,13 @@
 "use client";
 
-import { HTMLAttributes } from "react";
-import { motion } from "framer-motion";
+import { motion, type HTMLMotionProps } from "framer-motion";
+import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 import { useTilt } from "@/hooks/useTilt";
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {
+interface CardProps extends Omit<HTMLMotionProps<"div">, "children"> {
+  children?: ReactNode;
   interactive?: boolean;
 }
 

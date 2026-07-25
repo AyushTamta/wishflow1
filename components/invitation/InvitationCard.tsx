@@ -126,11 +126,6 @@ export default function InvitationCard({
         duration: 0.8,
       },
     }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
           >
             <Card
               interactive

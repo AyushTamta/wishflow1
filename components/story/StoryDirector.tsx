@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect } from "react";
+import type { ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { StoryScene } from "@/types/story";
@@ -56,7 +57,7 @@ export default function StoryDirector() {
     setIsTransitioning,
   ]);
 
-  const sceneMap = {
+  const sceneMap: Partial<Record<StoryScene, ReactNode>> = {
     [StoryScene.INVITATION]: (
       <InvitationCard
         visible

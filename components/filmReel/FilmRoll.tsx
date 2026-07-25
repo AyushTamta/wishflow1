@@ -45,37 +45,3 @@ export default function FilmRoll({
     </motion.div>
   );
 }
-// components/filmReel/constants.ts
-
-export const FRAME_WIDTH = 190;
-export const FRAME_HEIGHT = 300;
-export const GAP = 34;
-export const SIDE_PADDING = 180;
-
-// components/filmReel/types.ts
-
-export interface FilmReelSceneProps {
-  active: boolean;
-  photos: string[];
-  onComplete: () => void;
-}
-
-export interface FilmStripProps {
-  photos: string[];
-  onComplete?: () => void;
-}
-
-export interface FilmFrameProps {
-  src: string;
-  index: number;
-  active: boolean;
-}
-
-// components/filmReel/index.ts
-
-export { default as FilmReelScene } from "./FilmReelScene";
-export { default as FilmStrip } from "./FilmStrip";
-export { default as FilmFrame } from "./FilmFrame";
-export { default as FilmRoll } from "./FilmRoll";
-export * from "./constants";
-export * from "./types";

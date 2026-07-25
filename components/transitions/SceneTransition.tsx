@@ -7,7 +7,7 @@ import CurtainTransition from "./CurtainTransition";
 import IrisTransition from "./IrisTransition";
 import LensFlash from "./LensFlash";
 
-import { TransitionType } from "@/lib/transitions";
+import { TransitionType } from "@/lib/transition";
 
 interface Props {
   type: TransitionType;

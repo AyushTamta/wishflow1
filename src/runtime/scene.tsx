@@ -1,6 +1,4 @@
 import type { ComponentType } from "react";
-import type { ActiveStorySceneProps } from "@/types/scene";
-
 export type SceneId =
   | "invitation"
   | "projector"
@@ -11,5 +9,5 @@ export type SceneId =
 
 export interface SceneDefinition {
   id: SceneId;
-  component: ComponentType<ActiveStorySceneProps>;
+  component: ComponentType<any>;
 }

@@ -6,12 +6,17 @@ import { motion } from "framer-motion";
 import CreditRoll from "./CreditRoll";
 import ReplayButton from "./ReplayButton";
 
-import { ActiveStorySceneProps } from "@/types/scene";
 import { useScene } from "@/hooks/useScene";
+
+interface CreditsSceneProps {
+  active: boolean;
+  onReplay?: () => void;
+}
 
 export default function CreditsScene({
   active,
-}: ActiveStorySceneProps) {
+  onReplay,
+}: CreditsSceneProps) {
   useScene("credits", active);
 
   const [finished, setFinished] = useState(false);
@@ -64,7 +69,7 @@ export default function CreditsScene({
         }}
       >
         <ReplayButton
-          onReplay={() => window.location.reload()}
+          onReplay={onReplay ?? (() => window.location.reload())}
         />
       </motion.div>
 

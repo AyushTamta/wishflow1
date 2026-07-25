@@ -1,6 +1,7 @@
 export const hero = {
   title: "A Story Worth Remembering",
   name: "Ayush ❤️",
+  music: "/audio/bgm.mp3",
 };
 
 export const memories = [

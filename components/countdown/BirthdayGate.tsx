@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 
 const BIRTHDAY_START = new Date("2026-07-27T00:00:00+05:30").getTime();
+
+let tickAudioContext: AudioContext | null = null;
 
 function splitRemaining(remaining: number) {
   const total = Math.max(0, remaining);
@@ -18,15 +20,19 @@ function splitRemaining(remaining: number) {
 }
 
 function useTickSound(enabled: boolean) {
-  const contextRef = useRef<AudioContext | null>(null);
-  const [unlocked, setUnlocked] = useState(false);
+  const [unlocked, setUnlocked] = useState(
+    () => tickAudioContext?.state === "running"
+  );
+
+  const enableSound = useCallback(async () => {
+    if (!tickAudioContext) tickAudioContext = new AudioContext();
+
+    await tickAudioContext.resume();
+    setUnlocked(tickAudioContext.state === "running");
+  }, []);
 
   useEffect(() => {
-    const unlock = () => {
-      if (!contextRef.current) contextRef.current = new AudioContext();
-      void contextRef.current.resume();
-      setUnlocked(true);
-    };
+    const unlock = () => void enableSound();
 
     window.addEventListener("pointerdown", unlock, { once: true, capture: true });
     window.addEventListener("keydown", unlock, { once: true, capture: true });
@@ -34,15 +40,14 @@ function useTickSound(enabled: boolean) {
     return () => {
       window.removeEventListener("pointerdown", unlock);
       window.removeEventListener("keydown", unlock);
-      void contextRef.current?.close();
     };
-  }, []);
+  }, [enableSound]);
 
   useEffect(() => {
-    if (!enabled || !unlocked || !contextRef.current) return;
+    if (!enabled || !unlocked || !tickAudioContext) return;
 
     const tick = () => {
-      const context = contextRef.current;
+      const context = tickAudioContext;
       if (!context) return;
 
       const oscillator = context.createOscillator();
@@ -67,6 +72,8 @@ function useTickSound(enabled: boolean) {
 
     return () => window.clearInterval(interval);
   }, [enabled, unlocked]);
+
+  return { unlocked, enableSound };
 }
 
 function TimeUnit({ value, label, digits = 2 }: { value: number; label: string; digits?: number }) {
@@ -92,7 +99,7 @@ interface BirthdayGateProps {
 
 function LaunchCountdown({ children }: BirthdayGateProps) {
   const [seconds, setSeconds] = useState(10);
-  useTickSound(seconds > 0);
+  const { unlocked, enableSound } = useTickSound(seconds > 0);
 
   useEffect(() => {
     if (seconds === 0) return;
@@ -127,6 +134,15 @@ function LaunchCountdown({ children }: BirthdayGateProps) {
           {seconds}
         </motion.p>
         <p className="mt-7 font-serif text-xl text-white/75 md:text-2xl">Ready for the surprise?</p>
+        {!unlocked && (
+          <button
+            type="button"
+            onClick={() => void enableSound()}
+            className="mt-5 rounded-full border border-[#e6c67a]/40 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#f2c867]"
+          >
+            Tap to enable ticking
+          </button>
+        )}
       </div>
     </main>
   );
@@ -134,7 +150,7 @@ function LaunchCountdown({ children }: BirthdayGateProps) {
 
 export default function BirthdayGate({ children }: BirthdayGateProps) {
   const [now, setNow] = useState<number | null>(null);
-  useTickSound(now !== null && now < BIRTHDAY_START);
+  const { unlocked, enableSound } = useTickSound(now !== null && now < BIRTHDAY_START);
 
   useEffect(() => {
     const tick = () => setNow(Date.now());
@@ -171,6 +187,13 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         <p className="text-[10px] font-semibold uppercase tracking-[0.48em] text-[#f2c867]">⚠ No spoilers</p>
         <h1 className="mt-5 font-serif text-4xl text-white md:text-6xl">Curiosity is part of the experience.</h1>
         <p className="mt-4 text-sm tracking-wide text-white/55 md:text-base">Please wait...</p>
+        <button
+          type="button"
+          onClick={() => void enableSound()}
+          className="mt-5 rounded-full border border-[#e6c67a]/40 bg-[#e6c67a]/10 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#f2c867] transition hover:bg-[#e6c67a]/20"
+        >
+          {unlocked ? "✓ Ticking enabled" : "Tap to enable ticking"}
+        </button>
 
         <div className="mx-auto my-9 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/70 to-transparent" />
         <div className="flex flex-wrap items-start justify-center gap-x-3 gap-y-8 md:gap-x-8">

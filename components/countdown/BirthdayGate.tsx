@@ -3,34 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
+import SRKQuiz from "./SRKQuiz";
 
-const TRIVIA_START = new Date("2026-07-26T12:00:00+05:30").getTime();
+const QUIZ_START = new Date("2026-07-26T22:30:00+05:30").getTime();
 const BIRTHDAY_START = new Date("2026-07-27T00:00:00+05:30").getTime();
 
 let tickAudioContext: AudioContext | null = null;
-
-const OM_SHANTI_OM_TRIVIA = [
-  {
-    question: "Who made her Hindi-film debut as Shantipriya?",
-    answer: "Deepika Padukone ✨",
-  },
-  {
-    question: "Which year did Om Shanti Om light up the big screen?",
-    answer: "2007 🎬",
-  },
-  {
-    question: "Who directed this iconic reincarnation romance?",
-    answer: "Farah Khan 🎞️",
-  },
-  {
-    question: "What is at the heart of Om's second chance?",
-    answer: "Reincarnation — and a story unfinished. 🔥",
-  },
-  {
-    question: "What is the name of the film's luminous leading lady?",
-    answer: "Shantipriya 💫",
-  },
-];
 
 function splitRemaining(remaining: number) {
   const total = Math.max(0, remaining);
@@ -122,47 +100,6 @@ function TimeUnit({ value, label, digits = 2 }: { value: number; label: string; 
   );
 }
 
-function OmShantiOmTrivia() {
-  const [index, setIndex] = useState(0);
-  const [revealed, setRevealed] = useState(false);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setIndex((current) => (current + 1) % OM_SHANTI_OM_TRIVIA.length);
-      setRevealed(false);
-    }, 14_000);
-
-    return () => window.clearInterval(interval);
-  }, []);
-
-  const trivia = OM_SHANTI_OM_TRIVIA[index];
-
-  return (
-    <button
-      type="button"
-      onClick={() => setRevealed((current) => !current)}
-      className="mt-5 w-full max-w-xl rounded-2xl border border-[#e6c67a]/25 bg-[#120b06]/65 px-4 py-3 text-center shadow-[0_0_32px_rgba(230,198,122,.08)] transition hover:border-[#e6c67a]/50"
-      aria-label={revealed ? "Hide answer" : "Reveal answer"}
-    >
-      <p className="text-[9px] font-semibold uppercase tracking-[0.34em] text-[#f2c867]/85">
-        ✦ Om Shanti Om: Cinephile Intermission ✦
-      </p>
-      <motion.p
-        key={`${index}-${revealed}`}
-        initial={{ opacity: 0, y: 5 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25 }}
-        className="mt-2 text-sm text-white/85 md:text-base"
-      >
-        {revealed ? trivia.answer : trivia.question}
-      </motion.p>
-      <p className="mt-2 text-[9px] uppercase tracking-[0.2em] text-[#e6c67a]/60">
-        {revealed ? "Tap to hide" : "Tap to reveal"}
-      </p>
-    </button>
-  );
-}
-
 interface BirthdayGateProps {
   children: ReactNode;
 }
@@ -232,7 +169,6 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
   if (now !== null && now >= BIRTHDAY_START) return <LaunchCountdown>{children}</LaunchCountdown>;
 
   const remaining = splitRemaining(BIRTHDAY_START - (now ?? BIRTHDAY_START));
-  const triviaUnlocked = now !== null && now >= TRIVIA_START;
 
   return (
     <main className="relative flex h-[100dvh] items-center justify-center overflow-hidden bg-[#050403] px-5 text-center">
@@ -276,7 +212,7 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         </div>
         <div className="mx-auto mt-5 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/45 to-transparent md:mt-9" />
         <p className="mt-4 text-xs italic text-[#f1d99c]/70 md:mt-6">Some surprises are worth waiting for. 🎬</p>
-        {triviaUnlocked && <OmShantiOmTrivia />}
+        <SRKQuiz now={now} unlockAt={QUIZ_START} />
       </motion.section>
     </main>
   );

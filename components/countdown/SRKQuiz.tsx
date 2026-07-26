@@ -12,6 +12,7 @@ import SRKReward from "./SRKReward";
 interface SRKQuizProps {
   now: number | null;
   unlockAt: number;
+  className?: string;
 }
 
 type QuizScreen = "welcome" | "intro" | "question" | "reward" | "halfway" | "final-reel" | "complete";
@@ -24,7 +25,7 @@ function formatTime(remaining: number) {
   return [hours, minutes, seconds].map((value) => String(value).padStart(2, "0")).join(":");
 }
 
-export default function SRKQuiz({ now, unlockAt }: SRKQuizProps) {
+export default function SRKQuiz({ now, unlockAt, className = "" }: SRKQuizProps) {
   const [screen, setScreen] = useState<QuizScreen>("welcome");
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -74,7 +75,7 @@ export default function SRKQuiz({ now, unlockAt }: SRKQuizProps) {
 
   if (!unlocked) {
     return (
-      <section className="mt-5 w-full max-w-xl rounded-2xl border border-[#e6c67a]/25 bg-[#120b06]/65 px-5 py-5 text-center shadow-[0_0_32px_rgba(230,198,122,.08)]">
+      <section className={`mt-5 w-full max-w-xl rounded-2xl border border-[#e6c67a]/25 bg-[#120b06]/65 px-5 py-5 text-center shadow-[0_0_32px_rgba(230,198,122,.08)] ${className}`}>
         <p className="text-[10px] uppercase tracking-[0.3em] text-[#e6c67a]">Private screening</p>
         <h2 className="mt-3 font-serif text-2xl text-[#fff0c8]">A Little Surprise 👀</h2>
         <p className="mt-4 text-sm leading-relaxed text-white/75">Hey, Ambay. 👋<br /><br />This one&apos;s almost ready.<br />Come back at 10:30 PM.</p>
@@ -86,7 +87,7 @@ export default function SRKQuiz({ now, unlockAt }: SRKQuizProps) {
 
   if (screen === "welcome") {
     return (
-      <section className="mt-5 w-full max-w-xl rounded-2xl border border-[#e6c67a]/30 bg-[#120b06]/75 px-5 py-6 text-center shadow-[0_0_40px_rgba(230,198,122,.12)]">
+      <section className={`mt-5 w-full max-w-xl rounded-2xl border border-[#e6c67a]/30 bg-[#120b06]/75 px-5 py-6 text-center shadow-[0_0_40px_rgba(230,198,122,.12)] ${className}`}>
         <p className="font-serif text-2xl text-[#fff0c8]">Hey, Ambay. 👋</p>
         <p className="mt-4 text-sm leading-relaxed text-white/75">Looks like you&apos;ve found a little surprise before the real surprise.<br /><br />So while the countdown keeps ticking...<br />I thought we&apos;d make the wait a little more fun.</p>
         <p className="mt-5 font-serif text-xl text-[#f2c867]">Ready for a tiny challenge?</p>

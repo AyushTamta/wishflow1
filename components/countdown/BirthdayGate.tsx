@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import CountdownJukebox from "./CountdownJukebox";
+import SRKQuiz from "./SRKQuiz";
 
+const QUIZ_START = new Date("2026-07-26T22:30:00+05:30").getTime();
 const BIRTHDAY_START = new Date("2026-07-27T00:00:00+05:30").getTime();
 
 function splitRemaining(remaining: number) {
@@ -144,7 +146,10 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         )}
         <div className="mx-auto mt-3 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/45 to-transparent sm:mt-5 lg:mt-9" />
         <p className="mt-3 text-[11px] italic text-[#f1d99c]/70 sm:mt-4 sm:text-xs lg:mt-6">Some surprises are worth waiting for. 🎬</p>
-        <CountdownJukebox />
+        <div className="mx-auto mt-4 grid w-full max-w-5xl grid-cols-1 gap-3 text-left sm:mt-5 md:grid-cols-2 md:items-stretch md:gap-4">
+          <CountdownJukebox className="mt-0 max-w-none sm:mt-0" />
+          <SRKQuiz now={now} unlockAt={QUIZ_START} className="mt-0 max-w-none" />
+        </div>
       </motion.section>
     </main>
   );

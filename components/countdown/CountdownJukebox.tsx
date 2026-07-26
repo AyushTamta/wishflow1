@@ -10,7 +10,7 @@ const tracks = [
   { title: "Deewangi Deewangi", subtitle: "Om Shanti Om", src: "/audio/deewangi-jukebox.mp3" },
 ];
 
-export default function CountdownJukebox() {
+export default function CountdownJukebox({ className = "" }: { className?: string }) {
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -37,7 +37,7 @@ export default function CountdownJukebox() {
   const track = tracks[index];
 
   return (
-    <section className="mt-4 w-full max-w-xl rounded-2xl border border-[#e6c67a]/30 bg-[#120b06]/80 p-3 text-left shadow-[0_0_32px_rgba(230,198,122,.1)] sm:mt-5 sm:p-4">
+    <section className={`mt-4 w-full max-w-xl rounded-2xl border border-[#e6c67a]/30 bg-[#120b06]/80 p-3 text-left shadow-[0_0_32px_rgba(230,198,122,.1)] sm:mt-5 sm:p-4 ${className}`}>
       <div className="flex items-center gap-3">
         <div className="relative flex h-14 w-20 shrink-0 items-center justify-center rounded-md border border-[#e6c67a]/55 bg-[linear-gradient(135deg,#9a4d35,#f0b95f_50%,#75301f)] shadow-inner sm:h-16 sm:w-24">
           <div className="absolute inset-x-2 top-2 h-8 rounded-sm bg-[#f2d89d]/90" />

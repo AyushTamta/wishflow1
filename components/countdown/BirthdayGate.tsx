@@ -1,15 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import CountdownJukebox from "./CountdownJukebox";
-import SRKQuiz from "./SRKQuiz";
 
-const QUIZ_START = new Date("2026-07-26T22:30:00+05:30").getTime();
 const BIRTHDAY_START = new Date("2026-07-27T00:00:00+05:30").getTime();
-
-let tickAudioContext: AudioContext | null = null;
 
 function splitRemaining(remaining: number) {
   const total = Math.max(0, remaining);
@@ -20,68 +16,6 @@ function splitRemaining(remaining: number) {
   const milliseconds = total % 1_000;
 
   return { days, hours, minutes, seconds, milliseconds };
-}
-
-function playTick(context: AudioContext) {
-  const now = context.currentTime;
-  const oscillator = context.createOscillator();
-  const gain = context.createGain();
-
-  oscillator.type = "square";
-  oscillator.frequency.setValueAtTime(1_150, now);
-  gain.gain.setValueAtTime(0.075, now);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.085);
-  oscillator.connect(gain).connect(context.destination);
-  oscillator.start(now);
-  oscillator.stop(now + 0.09);
-}
-
-function useTickSound(enabled: boolean) {
-  const [unlocked, setUnlocked] = useState(
-    () => tickAudioContext?.state === "running"
-  );
-
-  const enableSound = useCallback(() => {
-    if (!tickAudioContext) tickAudioContext = new AudioContext();
-
-    // iOS Safari only permits the first audible sound within the tap itself.
-    // Start one now, then keep the same audio context for subsequent ticks.
-    playTick(tickAudioContext);
-    void tickAudioContext.resume().then(() => {
-      setUnlocked(tickAudioContext?.state === "running");
-    });
-  }, []);
-
-  useEffect(() => {
-    const unlock = () => void enableSound();
-
-    window.addEventListener("pointerdown", unlock, { once: true, capture: true });
-    window.addEventListener("keydown", unlock, { once: true, capture: true });
-
-    return () => {
-      window.removeEventListener("pointerdown", unlock);
-      window.removeEventListener("keydown", unlock);
-    };
-  }, [enableSound]);
-
-  useEffect(() => {
-    if (!enabled || !unlocked || !tickAudioContext) return;
-
-    const tick = () => playTick(tickAudioContext!);
-
-    let previousSecond = Math.floor(Date.now() / 1_000);
-    tick();
-    const interval = window.setInterval(() => {
-      const currentSecond = Math.floor(Date.now() / 1_000);
-      if (currentSecond === previousSecond) return;
-      previousSecond = currentSecond;
-      tick();
-    }, 50);
-
-    return () => window.clearInterval(interval);
-  }, [enabled, unlocked]);
-
-  return { unlocked, enableSound };
 }
 
 function TimeUnit({ value, label, digits = 2 }: { value: number; label: string; digits?: number }) {
@@ -107,7 +41,6 @@ interface BirthdayGateProps {
 
 function LaunchCountdown({ children }: BirthdayGateProps) {
   const [seconds, setSeconds] = useState(10);
-  const { unlocked, enableSound } = useTickSound(seconds > 0);
 
   useEffect(() => {
     if (seconds === 0) return;
@@ -142,15 +75,6 @@ function LaunchCountdown({ children }: BirthdayGateProps) {
           {seconds}
         </motion.p>
         <p className="mt-7 font-serif text-xl text-white/75 md:text-2xl">Ready for the surprise?</p>
-        {!unlocked && (
-          <button
-            type="button"
-            onClick={() => void enableSound()}
-            className="mt-5 rounded-full border border-[#e6c67a]/40 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#f2c867]"
-          >
-            Tap to enable ticking
-          </button>
-        )}
       </div>
     </main>
   );
@@ -158,7 +82,6 @@ function LaunchCountdown({ children }: BirthdayGateProps) {
 
 export default function BirthdayGate({ children }: BirthdayGateProps) {
   const [now, setNow] = useState<number | null>(null);
-  const { unlocked, enableSound } = useTickSound(now !== null && now < BIRTHDAY_START);
 
   useEffect(() => {
     const tick = () => setNow(Date.now());
@@ -195,13 +118,6 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         <p className="text-[10px] font-semibold uppercase tracking-[0.48em] text-[#f2c867]">⚠ No spoilers</p>
         <h1 className="mt-3 font-serif text-2xl text-white sm:mt-4 sm:text-3xl md:mt-5 md:text-6xl">Curiosity is part of the experience.</h1>
         <p className="mt-2 text-xs tracking-wide text-white/55 sm:mt-4 sm:text-sm md:text-base">Please wait...</p>
-        <button
-          type="button"
-          onClick={() => void enableSound()}
-          className="mt-2 rounded-full border border-[#e6c67a]/40 bg-[#e6c67a]/10 px-4 py-1.5 text-[9px] uppercase tracking-[0.18em] text-[#f2c867] transition hover:bg-[#e6c67a]/20 sm:mt-3 sm:py-2 sm:text-[10px] md:mt-5"
-        >
-          {unlocked ? "✓ Ticking enabled" : "Tap to enable ticking"}
-        </button>
 
         <div className="mx-auto my-3 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/70 to-transparent sm:my-5 md:my-9" />
         <div className="flex flex-wrap items-start justify-center gap-x-2 gap-y-3 sm:gap-x-3 sm:gap-y-4 md:gap-x-8 md:gap-y-8">
@@ -214,7 +130,6 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         <div className="mx-auto mt-3 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/45 to-transparent sm:mt-5 md:mt-9" />
         <p className="mt-3 text-[11px] italic text-[#f1d99c]/70 sm:mt-4 sm:text-xs md:mt-6">Some surprises are worth waiting for. 🎬</p>
         <CountdownJukebox />
-        <SRKQuiz now={now} unlockAt={QUIZ_START} />
       </motion.section>
     </main>
   );

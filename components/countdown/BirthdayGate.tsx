@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
+import CountdownJukebox from "./CountdownJukebox";
 import SRKQuiz from "./SRKQuiz";
 
 const QUIZ_START = new Date("2026-07-26T22:30:00+05:30").getTime();
@@ -212,6 +213,7 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         </div>
         <div className="mx-auto mt-3 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/45 to-transparent sm:mt-5 md:mt-9" />
         <p className="mt-3 text-[11px] italic text-[#f1d99c]/70 sm:mt-4 sm:text-xs md:mt-6">Some surprises are worth waiting for. 🎬</p>
+        <CountdownJukebox />
         <SRKQuiz now={now} unlockAt={QUIZ_START} />
       </motion.section>
     </main>

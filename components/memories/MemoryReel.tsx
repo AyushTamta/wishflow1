@@ -134,7 +134,7 @@ export default function MemoryReel({
 
   if (showReelPrompt) {
     return (
-      <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#080604] px-6 py-10 text-center">
+      <section className="relative flex min-h-screen items-center justify-center overflow-x-hidden bg-[#080604] px-6 py-10 text-center">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,213,126,.18),transparent_28%),linear-gradient(135deg,#020202,#211208_52%,#020202)]" />
         <div className="pointer-events-none absolute left-0 top-1/2 h-[70vh] w-[52vw] -translate-y-1/2 bg-[linear-gradient(90deg,rgba(255,235,174,.18),transparent)] [clip-path:polygon(0_42%,100%_0,100%_100%,0_58%)] blur-xl" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-[repeating-linear-gradient(90deg,#3d1510_0_42px,#7b2a1e_42px_84px)] opacity-35" />

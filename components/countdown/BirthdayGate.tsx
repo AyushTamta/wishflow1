@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 
-const BIRTHDAY_START = new Date("2026-07-26T12:00:00+05:30").getTime();
+const TRIVIA_START = new Date("2026-07-26T12:00:00+05:30").getTime();
+const BIRTHDAY_START = new Date("2026-07-27T00:00:00+05:30").getTime();
 
 let tickAudioContext: AudioContext | null = null;
 
@@ -231,6 +232,7 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
   if (now !== null && now >= BIRTHDAY_START) return <LaunchCountdown>{children}</LaunchCountdown>;
 
   const remaining = splitRemaining(BIRTHDAY_START - (now ?? BIRTHDAY_START));
+  const triviaUnlocked = now !== null && now >= TRIVIA_START;
 
   return (
     <main className="relative flex h-[100dvh] items-center justify-center overflow-hidden bg-[#050403] px-5 text-center">
@@ -274,7 +276,7 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         </div>
         <div className="mx-auto mt-5 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/45 to-transparent md:mt-9" />
         <p className="mt-4 text-xs italic text-[#f1d99c]/70 md:mt-6">Some surprises are worth waiting for. 🎬</p>
-        <OmShantiOmTrivia />
+        {triviaUnlocked && <OmShantiOmTrivia />}
       </motion.section>
     </main>
   );

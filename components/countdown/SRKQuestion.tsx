@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { SRKQuizQuestion } from "@/data/srkQuiz";
+import type { SRKVaultMovie } from "@/data/srkVault";
 
 interface SRKQuestionProps {
   index: number;
-  question: SRKQuizQuestion;
+  question: SRKVaultMovie;
   selected: number | null;
   onSelect: (option: number) => void;
   onContinue: () => void;
@@ -30,7 +30,7 @@ export default function SRKQuestion({
       exit={{ opacity: 0, y: -18 }}
     >
       <div className="absolute inset-0 opacity-30 [background-image:radial-gradient(rgba(230,198,122,.22)_1px,transparent_1px)] [background-size:18px_18px]" />
-      <div className="relative grid gap-5 md:grid-cols-[1fr_220px] md:items-center md:gap-6">
+      <div className="relative">
         <div>
           <p className="text-[10px] uppercase tracking-[0.34em] text-[#e6c67a]">
             Reel {index + 1} / 10 · {index < 3 ? "Warm-up" : index < 7 ? "Cinephile" : "Final cut"}
@@ -43,7 +43,7 @@ export default function SRKQuestion({
               const isSelected = selected === optionIndex;
               const isCorrect = optionIndex === question.answer;
               const resultClass = !answered
-                ? "border-white/15 bg-white/[.04] hover:border-[#e6c67a]/70 hover:bg-[#e6c67a]/10"
+                ? "border-[#e6c67a]/35 bg-[#2b1a0d]/90 text-[#fff6dd] shadow-[inset_0_1px_rgba(255,255,255,.08)] hover:border-[#e6c67a]/90 hover:bg-[#4a2b13]"
                 : isCorrect
                   ? "border-emerald-300/70 bg-emerald-300/15 text-emerald-100"
                   : isSelected
@@ -56,7 +56,7 @@ export default function SRKQuestion({
                   key={option}
                   disabled={answered}
                   onClick={() => onSelect(optionIndex)}
-                  className={`rounded-xl border px-3 py-2.5 text-left text-xs transition sm:px-4 sm:py-3 sm:text-sm ${resultClass}`}
+                  className={`rounded-xl border px-3 py-2.5 text-left text-sm font-medium leading-snug transition sm:px-4 sm:py-3 sm:text-base ${resultClass}`}
                 >
                   <span className="mr-2 text-[#e6c67a]/70">{String.fromCharCode(65 + optionIndex)}.</span>
                   {option}
@@ -77,9 +77,6 @@ export default function SRKQuestion({
           )}
         </div>
 
-        <div className="mx-auto order-first w-24 rotate-2 rounded-lg border-4 border-[#f0d493]/70 bg-[#24150d] p-1 shadow-2xl sm:w-32 md:order-none md:w-full">
-          <img src={question.poster} alt={`${question.movie} poster`} className="aspect-[2/3] w-full object-cover" />
-        </div>
       </div>
     </motion.section>
   );

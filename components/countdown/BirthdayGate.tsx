@@ -85,17 +85,17 @@ function useTickSound(enabled: boolean) {
 
 function TimeUnit({ value, label, digits = 2 }: { value: number; label: string; digits?: number }) {
   return (
-    <div className="min-w-[4.75rem] text-center md:min-w-[7rem]">
+    <div className="min-w-[3.45rem] text-center sm:min-w-[4.75rem] md:min-w-[7rem]">
       <motion.div
         key={value}
         initial={{ opacity: 0.4, y: 7 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.16 }}
-        className="font-mono text-4xl font-semibold tabular-nums text-[#fff0c8] drop-shadow-[0_0_22px_rgba(255,213,126,.38)] md:text-7xl"
+        className="font-mono text-3xl font-semibold tabular-nums text-[#fff0c8] drop-shadow-[0_0_22px_rgba(255,213,126,.38)] sm:text-4xl md:text-7xl"
       >
         {String(value).padStart(digits, "0")}
       </motion.div>
-      <p className="mt-3 text-[9px] uppercase tracking-[0.28em] text-[#e7c77d]/65 md:text-[10px]">{label}</p>
+      <p className="mt-1.5 text-[8px] uppercase tracking-[0.2em] text-[#e7c77d]/65 sm:mt-3 sm:text-[9px] md:text-[10px]">{label}</p>
     </div>
   );
 }
@@ -171,7 +171,7 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
   const remaining = splitRemaining(BIRTHDAY_START - (now ?? BIRTHDAY_START));
 
   return (
-    <main className="relative flex h-[100dvh] items-center justify-center overflow-hidden bg-[#050403] px-5 text-center">
+    <main className="relative flex h-[100dvh] items-start justify-center overflow-y-auto bg-[#050403] px-3 py-[max(1rem,env(safe-area-inset-top))] text-center sm:px-5 md:items-center md:overflow-hidden md:py-0">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_35%,rgba(211,157,70,.18),transparent_35%),radial-gradient(circle_at_12%_88%,rgba(91,25,29,.34),transparent_30%),linear-gradient(145deg,#040302,#17100a_55%,#030303)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-[linear-gradient(135deg,rgba(255,255,255,.06),transparent_55%)]" />
       <motion.div
@@ -189,29 +189,29 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         initial={{ opacity: 0, y: 22 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.1, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-5xl rounded-[2rem] border border-[#e6c67a]/20 bg-black/20 px-5 py-6 shadow-[0_0_100px_rgba(0,0,0,.55)] backdrop-blur-sm md:px-12 md:py-14"
+        className="relative z-10 my-auto w-full max-w-5xl rounded-[1.5rem] border border-[#e6c67a]/20 bg-black/20 px-4 py-5 shadow-[0_0_100px_rgba(0,0,0,.55)] backdrop-blur-sm sm:rounded-[2rem] sm:px-5 sm:py-6 md:px-12 md:py-14"
       >
         <p className="text-[10px] font-semibold uppercase tracking-[0.48em] text-[#f2c867]">⚠ No spoilers</p>
-        <h1 className="mt-4 font-serif text-3xl text-white md:mt-5 md:text-6xl">Curiosity is part of the experience.</h1>
-        <p className="mt-4 text-sm tracking-wide text-white/55 md:text-base">Please wait...</p>
+        <h1 className="mt-3 font-serif text-2xl text-white sm:mt-4 sm:text-3xl md:mt-5 md:text-6xl">Curiosity is part of the experience.</h1>
+        <p className="mt-2 text-xs tracking-wide text-white/55 sm:mt-4 sm:text-sm md:text-base">Please wait...</p>
         <button
           type="button"
           onClick={() => void enableSound()}
-          className="mt-3 rounded-full border border-[#e6c67a]/40 bg-[#e6c67a]/10 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#f2c867] transition hover:bg-[#e6c67a]/20 md:mt-5"
+          className="mt-2 rounded-full border border-[#e6c67a]/40 bg-[#e6c67a]/10 px-4 py-1.5 text-[9px] uppercase tracking-[0.18em] text-[#f2c867] transition hover:bg-[#e6c67a]/20 sm:mt-3 sm:py-2 sm:text-[10px] md:mt-5"
         >
           {unlocked ? "✓ Ticking enabled" : "Tap to enable ticking"}
         </button>
 
-        <div className="mx-auto my-5 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/70 to-transparent md:my-9" />
-        <div className="flex flex-wrap items-start justify-center gap-x-3 gap-y-4 md:gap-x-8 md:gap-y-8">
+        <div className="mx-auto my-3 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/70 to-transparent sm:my-5 md:my-9" />
+        <div className="flex flex-wrap items-start justify-center gap-x-2 gap-y-3 sm:gap-x-3 sm:gap-y-4 md:gap-x-8 md:gap-y-8">
           <TimeUnit value={remaining.days} label="Days" />
           <TimeUnit value={remaining.hours} label="Hours" />
           <TimeUnit value={remaining.minutes} label="Minutes" />
           <TimeUnit value={remaining.seconds} label="Seconds" />
           <TimeUnit value={remaining.milliseconds} label="Milliseconds" digits={3} />
         </div>
-        <div className="mx-auto mt-5 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/45 to-transparent md:mt-9" />
-        <p className="mt-4 text-xs italic text-[#f1d99c]/70 md:mt-6">Some surprises are worth waiting for. 🎬</p>
+        <div className="mx-auto mt-3 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/45 to-transparent sm:mt-5 md:mt-9" />
+        <p className="mt-3 text-[11px] italic text-[#f1d99c]/70 sm:mt-4 sm:text-xs md:mt-6">Some surprises are worth waiting for. 🎬</p>
         <SRKQuiz now={now} unlockAt={QUIZ_START} />
       </motion.section>
     </main>

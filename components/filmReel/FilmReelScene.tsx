@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import FilmStrip from "./FilmStrip";
@@ -18,43 +18,26 @@ export default function FilmReelScene({
 }: FilmReelSceneProps) {
   const [showStrip, setShowStrip] = useState(false);
   const [beamOn, setBeamOn] = useState(false);
-  const [reelSpin, setReelSpin] = useState(false);
 
   useEffect(() => {
     if (!active) return;
 
     setBeamOn(false);
     setShowStrip(false);
-    setReelSpin(false);
 
     const beam = window.setTimeout(() => {
       setBeamOn(true);
     }, 400);
 
-    const reel = window.setTimeout(() => {
-      setReelSpin(true);
-    }, 700);
-
     const strip = window.setTimeout(() => {
       setShowStrip(true);
-    }, 1100);
+    }, 800);
 
     return () => {
       clearTimeout(beam);
-      clearTimeout(reel);
       clearTimeout(strip);
     };
   }, [active]);
-
-  const leftMarks = useMemo(
-    () => Array.from({ length: 24 }),
-    []
-  );
-
-  const rightMarks = useMemo(
-    () => Array.from({ length: 24 }),
-    []
-  );
 
   return (
     <AnimatePresence mode="wait">
@@ -73,7 +56,7 @@ export default function FilmReelScene({
           transition={{
             duration: 1,
           }}
-          className="relative h-screen w-screen overflow-hidden bg-[#050505]"
+          className="relative h-[100dvh] w-screen overflow-hidden bg-[#050505]"
         >
           {/* theatre background */}
           <div
@@ -110,65 +93,6 @@ export default function FilmReelScene({
               />
             )}
           </AnimatePresence>
-
-          {/* left reel */}
-
-          <motion.div
-            animate={
-              reelSpin
-                ? {
-                    rotate: 360,
-                  }
-                : {}
-            }
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="absolute left-10 top-1/2 z-30 flex h-44 w-44 -translate-y-1/2 items-center justify-center rounded-full border-[10px] border-neutral-700"
-          >
-            <div className="absolute h-8 w-8 rounded-full bg-neutral-500" />
-
-            {leftMarks.map((_, i) => (
-              <div
-                key={i}
-                className="absolute h-2 w-16 origin-left rounded bg-neutral-600"
-                style={{
-                  transform: `rotate(${i * 15}deg)`,
-                }}
-              />
-            ))}
-          </motion.div>
-
-          {/* right reel */}
-                    <motion.div
-            animate={
-              reelSpin
-                ? {
-                    rotate: -360,
-                  }
-                : {}
-            }
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="absolute right-10 top-1/2 z-30 flex h-44 w-44 -translate-y-1/2 items-center justify-center rounded-full border-[10px] border-neutral-700"
-          >
-            <div className="absolute h-8 w-8 rounded-full bg-neutral-500" />
-
-            {rightMarks.map((_, i) => (
-              <div
-                key={i}
-                className="absolute h-2 w-16 origin-left rounded bg-neutral-600"
-                style={{
-                  transform: `rotate(${i * 15}deg)`,
-                }}
-              />
-            ))}
-          </motion.div>
 
           {/* beam glow */}
 

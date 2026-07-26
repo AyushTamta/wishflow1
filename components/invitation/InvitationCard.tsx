@@ -34,7 +34,7 @@ export default function InvitationCard({
     <AnimatePresence mode="wait">
       {visible && (
         <motion.div
-          className="absolute inset-0 z-30 flex items-center justify-center overflow-hidden px-6"
+          className="absolute inset-0 z-30 flex items-center justify-center overflow-hidden px-4 py-5 sm:px-6"
           variants={fadeUp}
           initial="hidden"
           animate="visible"
@@ -135,12 +135,15 @@ export default function InvitationCard({
                 w-full
                 max-w-2xl
                 overflow-hidden
-                px-10
-                py-12
+                w-[min(100%,42rem)]
+                px-6
+                py-8
                 text-center
                 backdrop-blur-xl
-                md:px-16
-                md:py-16
+                sm:px-10
+                sm:py-10
+                md:px-14
+                md:py-12
               "
             >
               {/* Shimmer */}
@@ -209,7 +212,7 @@ export default function InvitationCard({
                     duration: 0.8,
                   }}
                 >
-                  <Display>WISHFLOW</Display>
+                  <Display>Ammu_Batashaa</Display>
                 </motion.div>
 
                 <motion.div
@@ -217,7 +220,7 @@ export default function InvitationCard({
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.55 }}
                 >
-                  <Body className="mt-6 text-white/75">
+                  <Body className="mt-5 text-base text-white/75 sm:mt-6 sm:text-lg">
                     Your seat is reserved.
                     <br />
                     Tonight, every memory returns to the big screen.
@@ -242,7 +245,7 @@ export default function InvitationCard({
                   }}
                   className="
                     mx-auto
-                    my-10
+                    my-6
                     h-px
                     w-40
                     origin-center
@@ -260,7 +263,7 @@ export default function InvitationCard({
                   className="
                     mx-auto
                     max-w-lg
-                    text-lg
+                    text-base
                     italic
                     leading-relaxed
                     text-white/80
@@ -275,7 +278,7 @@ export default function InvitationCard({
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.2 }}
-                  className="mt-14 flex flex-col items-center gap-4"
+                  className="mt-8 flex flex-col items-center gap-3 sm:mt-12 sm:gap-4"
                 >
                   <motion.div
                     whileHover={{
@@ -298,7 +301,7 @@ export default function InvitationCard({
                       duration: 4,
                       repeat: Infinity,
                     }}
-                    className="text-sm uppercase tracking-widest text-white/40"
+                    className="text-[10px] uppercase tracking-[0.15em] text-white/40 sm:text-sm sm:tracking-widest"
                   >
                     Approx. Experience · 3–4 Minutes
                   </motion.p>

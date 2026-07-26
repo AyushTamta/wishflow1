@@ -97,11 +97,7 @@ export default function FilmStrip({
       "change",
       (value) => {
 
-        if (
-          value <=
-          -SINGLE_LOOP *
-            (COPIES - 1)
-        ) {
+        if (value <= -SINGLE_LOOP * (COPIES - 2)) {
 
           x.set(
             value +
@@ -110,10 +106,7 @@ export default function FilmStrip({
 
         }
 
-        if (
-          value >
-          -SINGLE_LOOP
-        ) {
+        if (value > -SINGLE_LOOP * 0.5) {
 
           x.set(
             value -
@@ -240,11 +233,25 @@ export default function FilmStrip({
     return (
     <div
       ref={containerRef}
-      className="relative h-screen w-full overflow-hidden bg-[#050505]"
+      className="relative h-[100dvh] w-full overflow-hidden bg-[#050505]"
     >
 
       {/* Projector */}
       <Projector />
+
+      <motion.div
+        className="pointer-events-none absolute left-1/2 top-6 z-[125] -translate-x-1/2 text-center"
+        initial={{ opacity: 0, y: -18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.45, duration: 0.8 }}
+      >
+        <p className="text-[10px] uppercase tracking-[0.55em] text-[#E6C67A]/70">
+          Memory Reel
+        </p>
+        <h2 className="mt-2 font-serif text-2xl text-white drop-shadow-[0_0_28px_rgba(230,198,122,.24)] md:text-4xl">
+          Ambay&apos;s journey of spreading happiness
+        </h2>
+      </motion.div>
 
       {/* Left Reel */}
       <div
@@ -276,7 +283,7 @@ export default function FilmStrip({
       <div className="pointer-events-none absolute inset-0 z-40">
 
         <div
-          className="absolute left-0 top-1/2 h-[560px] w-[300px] -translate-y-1/2"
+          className="absolute left-0 top-1/2 h-[700px] w-[300px] -translate-y-1/2"
           style={{
             background:
               "linear-gradient(to right,#050505 68%,transparent)",
@@ -284,7 +291,7 @@ export default function FilmStrip({
         />
 
         <div
-          className="absolute right-0 top-1/2 h-[560px] w-[300px] -translate-y-1/2"
+          className="absolute right-0 top-1/2 h-[700px] w-[300px] -translate-y-1/2"
           style={{
             background:
               "linear-gradient(to left,#050505 68%,transparent)",
@@ -298,7 +305,7 @@ export default function FilmStrip({
         drag="x"
         dragElastic={0.04}
         dragMomentum
-        className="absolute left-1/2 top-1/2 z-30 flex -translate-x-1/2 -translate-y-1/2"
+        className="absolute left-1/2 top-[46%] z-30 flex -translate-x-1/2 -translate-y-1/2 scale-[0.56] sm:scale-[0.72] lg:top-1/2 lg:scale-100"
         style={{
           x: springX,
           filter:
@@ -431,23 +438,27 @@ export default function FilmStrip({
         className="
           absolute
           left-1/2
-          bottom-8
+          bottom-[calc(env(safe-area-inset-bottom)+0.75rem)]
           z-[120]
           -translate-x-1/2
           flex
+          w-[calc(100%-1rem)]
+          max-w-xl
+          flex-wrap
+          justify-center
           items-center
-          gap-5
+          gap-2
           rounded-full
           border
           border-white/10
           bg-black/75
-          px-5
-          py-3
+          px-3
+          py-2
           backdrop-blur-xl
           shadow-[0_20px_60px_rgba(0,0,0,.45)]
         "
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
 
           <span className="text-xs text-neutral-500">
             <Snail size={16} />
@@ -465,8 +476,9 @@ export default function FilmStrip({
               )
             }
             className="
-              w-72
-              max-w-[34vw]
+              w-24
+              sm:w-44
+              md:w-72
               cursor-pointer
               accent-yellow-400
             "
@@ -487,8 +499,10 @@ export default function FilmStrip({
           }}
           className="
             flex
-            h-12
-            w-12
+            h-10
+            w-10
+            sm:h-12
+            sm:w-12
             items-center
             justify-center
             rounded-full
@@ -506,8 +520,8 @@ export default function FilmStrip({
         </button>
 
         <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs uppercase tracking-[0.18em] text-neutral-300">
-          <FastForward size={14} />
-          {speed.toFixed(2)}x
+          <FastForward className="hidden sm:block" size={14} />
+          <span className="text-[10px] sm:text-xs">{speed.toFixed(2)}x</span>
         </div>
 
         {onComplete && (
@@ -520,9 +534,9 @@ export default function FilmStrip({
               border
               border-[#E6C67A]/40
               bg-[linear-gradient(135deg,rgba(230,198,122,.18),rgba(255,255,255,.04))]
-              px-6
-              py-3
-              text-xs
+              px-4
+              py-2.5
+              text-[10px]
               font-medium
               uppercase
               tracking-[0.22em]

@@ -35,7 +35,7 @@ export default function FilmRibbon({
       />
 
       <div
-        className="relative h-[560px] overflow-visible rounded-[4px]"
+        className="relative h-[700px] overflow-visible rounded-[4px]"
         style={{
           background: `
             linear-gradient(

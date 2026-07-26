@@ -14,7 +14,7 @@ export default function FilmWindow({
 }: FilmWindowProps) {
   return (
     <motion.div
-      className="relative h-[390px] w-[320px] flex-shrink-0"
+      className="relative h-[580px] w-[430px] flex-shrink-0"
       whileHover={{
         scale: 1.12,
         y: -18,
@@ -47,7 +47,7 @@ export default function FilmWindow({
       <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-black/70" />
 
       {/* Picture Gate */}
-      <div className="absolute left-4 right-4 top-6 bottom-6 overflow-hidden rounded-[1px] bg-black">
+      <div className="absolute bottom-7 left-5 right-5 top-7 overflow-hidden rounded-[1px] bg-black">
 
         {/* Image */}
         <motion.div
@@ -59,7 +59,7 @@ export default function FilmWindow({
             src={image}
             alt={`Memory ${index + 1}`}
             fill
-            sizes="320px"
+            sizes="430px"
             className="object-cover"
           />
         </motion.div>

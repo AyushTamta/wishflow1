@@ -38,16 +38,6 @@ export default function Reel({
       }}
       className="relative pointer-events-none select-none"
     >
-      {/* Warm cinematic glow */}
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(255,215,140,.14) 0%, transparent 72%)",
-          filter: "blur(60px)",
-        }}
-      />
-
       {/* Reel Image */}
       <Image
         src="/images/reel.png"
@@ -57,16 +47,6 @@ export default function Reel({
         draggable={false}
         sizes="980px"
         className="object-contain"
-      />
-
-      {/* Metallic highlight */}
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(255,255,255,.18), transparent 30%, transparent 70%, rgba(255,255,255,.05))",
-          mixBlendMode: "screen",
-        }}
       />
     </motion.div>
   );

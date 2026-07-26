@@ -10,7 +10,7 @@ export function Eyebrow({ children, className }: TypographyProps) {
   return (
     <p
       className={cn(
-        "text-xs uppercase tracking-[0.5em] text-[#E6C67A]",
+        "text-[10px] uppercase tracking-[0.28em] text-[#E6C67A] sm:text-xs sm:tracking-[0.5em]",
         className
       )}
     >
@@ -23,7 +23,7 @@ export function Display({ children, className }: TypographyProps) {
   return (
     <h1
       className={cn(
-        "font-serif text-5xl tracking-[0.15em] text-white md:text-7xl",
+        "font-serif text-[clamp(2.25rem,11vw,4.5rem)] tracking-[0.07em] text-white sm:tracking-[0.15em]",
         className
       )}
     >

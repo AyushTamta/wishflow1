@@ -2,12 +2,15 @@
 
 import { StoryDirector } from "@/components/story";
 import MusicPlayer from "@/components/music/MusicPlayer";
+import { BirthdayGate } from "@/components/countdown";
 
 export default function Home() {
   return (
-    <main className="relative h-screen overflow-hidden bg-black">
-      <StoryDirector />
-      <MusicPlayer />
-    </main>
+    <BirthdayGate>
+      <main className="relative h-[100dvh] overflow-hidden bg-black">
+        <StoryDirector />
+        <MusicPlayer />
+      </main>
+    </BirthdayGate>
   );
 }

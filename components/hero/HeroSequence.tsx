@@ -1,16 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo } from "react";
 
-const FIREWORKS = [
-  { x: "14%", y: "20%", color: "#ffd166", delay: 0 },
-  { x: "82%", y: "18%", color: "#ff6b9a", delay: 0.6 },
-  { x: "28%", y: "34%", color: "#8ec5ff", delay: 1.1 },
-  { x: "70%", y: "36%", color: "#a6ffcb", delay: 1.7 },
-  { x: "50%", y: "14%", color: "#fff1a8", delay: 0.25 },
-  { x: "10%", y: "48%", color: "#f7a8ff", delay: 1.3 },
-  { x: "90%", y: "50%", color: "#ffd6a5", delay: 1.9 },
+const ROCKETS = [
+  { left: "12%", endX: 50, endY: -390, color: "#ffd166", delay: 0 },
+  { left: "32%", endX: -35, endY: -470, color: "#ff6b9a", delay: 0.55 },
+  { left: "52%", endX: 20, endY: -430, color: "#8ec5ff", delay: 1.05 },
+  { left: "72%", endX: -55, endY: -455, color: "#a6ffcb", delay: 1.5 },
+  { left: "88%", endX: -70, endY: -370, color: "#fff1a8", delay: 2.05 },
 ];
 
 const FLOWERS = [
@@ -28,46 +26,6 @@ const FLOWERS = [
   "✷",
 ];
 
-function FirecrackerSound() {
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    audio.volume = 0.55;
-
-    const play = async () => {
-      audio.currentTime = 0;
-      try {
-        await audio.play();
-      } catch {
-        // Browsers may block autoplay until the first user gesture.
-      }
-    };
-
-    void play();
-
-    window.addEventListener("pointerdown", play, { once: true });
-    window.addEventListener("keydown", play, { once: true });
-
-    return () => {
-      window.removeEventListener("pointerdown", play);
-      window.removeEventListener("keydown", play);
-      audio.pause();
-    };
-  }, []);
-
-  return (
-    <audio
-      ref={audioRef}
-      src="/audio/fireworks-grand-finale.mp3"
-      preload="auto"
-      autoPlay
-    />
-  );
-}
-
 export default function HeroSequence() {
   const petals = useMemo(
     () =>
@@ -82,38 +40,71 @@ export default function HeroSequence() {
 
   return (
     <div className="pointer-events-none absolute inset-0 z-[999] overflow-hidden px-6">
-      <FirecrackerSound />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(0deg,rgba(255,184,80,.16),transparent)]" />
 
-      {FIREWORKS.map((firework) => (
+      {ROCKETS.map((rocket, rocketIndex) => (
         <motion.div
-          key={`${firework.x}-${firework.y}`}
-          className="absolute h-44 w-44 -translate-x-1/2 -translate-y-1/2"
+          key={rocket.left}
+          className="absolute bottom-[-40px] h-3 w-3 rounded-full"
           style={{
-            left: firework.x,
-            top: firework.y,
+            left: rocket.left,
+            background: rocket.color,
+            boxShadow: `0 0 24px ${rocket.color}`,
+          }}
+          animate={{
+            x: [0, rocket.endX, rocket.endX],
+            y: [0, rocket.endY, rocket.endY],
+            opacity: [0, 1, 0],
+            scale: [0.7, 1, 0.2],
+          }}
+          transition={{
+            duration: 2.8,
+            delay: rocket.delay,
+            repeat: Infinity,
+            repeatDelay: 1.2,
+            ease: "easeOut",
           }}
         >
-          {Array.from({ length: 18 }).map((_, index) => (
+          <motion.span
+            className="absolute left-1/2 top-3 h-36 w-px -translate-x-1/2 rounded-full"
+            style={{
+              background: `linear-gradient(180deg, ${rocket.color}, transparent)`,
+            }}
+            animate={{
+              opacity: [0, 0.8, 0],
+              scaleY: [0.2, 1, 0.4],
+            }}
+            transition={{
+              duration: 2.8,
+              delay: rocket.delay,
+              repeat: Infinity,
+              repeatDelay: 1.2,
+            }}
+          />
+
+          <span className="absolute left-1/2 top-1/2">
+          {Array.from({ length: 22 }).map((_, index) => (
             <motion.span
               key={index}
-              className="absolute left-1/2 top-1/2 h-1.5 w-12 origin-left rounded-full"
+              className="absolute h-1.5 w-16 origin-left rounded-full"
               style={{
-                background: `linear-gradient(90deg, ${firework.color}, transparent)`,
-                rotate: `${index * 20}deg`,
+                background: `linear-gradient(90deg, ${rocket.color}, transparent)`,
+                rotate: `${index * (360 / 22)}deg`,
               }}
               animate={{
-                scaleX: [0, 1, 0],
-                opacity: [0, 1, 0],
+                scaleX: [0, 0, 1.15, 0],
+                opacity: [0, 0, 1, 0],
               }}
               transition={{
-                duration: 1.45,
-                delay: firework.delay,
+                duration: 2.8,
+                delay: rocket.delay + 0.9 + rocketIndex * 0.03,
                 repeat: Infinity,
-                repeatDelay: 1.4,
+                repeatDelay: 1.2,
                 ease: "easeOut",
               }}
             />
           ))}
+          </span>
         </motion.div>
       ))}
 
@@ -160,7 +151,7 @@ export default function HeroSequence() {
         >
           <div className="relative">
             <motion.div
-              className="absolute -inset-x-10 -inset-y-8 rounded-[32px] border border-yellow-200/25 bg-black/20 shadow-[0_0_90px_rgba(255,193,90,.28)] backdrop-blur-[2px]"
+              className="absolute -inset-x-14 -inset-y-10 rounded-[44px] border border-yellow-200/30 bg-[linear-gradient(135deg,rgba(30,12,12,.55),rgba(255,210,120,.12),rgba(20,10,18,.55))] shadow-[0_0_110px_rgba(255,193,90,.34)] backdrop-blur-[3px]"
               animate={{
                 opacity: [0.55, 0.9, 0.55],
                 scale: [1, 1.025, 1],
@@ -199,6 +190,16 @@ export default function HeroSequence() {
             >
               ✹
             </motion.div>
+          <motion.p
+            className="relative mb-4 text-xs uppercase tracking-[0.55em] text-yellow-100/80"
+            animate={{ opacity: [0.55, 1, 0.55] }}
+            transition={{
+              duration: 2.4,
+              repeat: Infinity,
+            }}
+          >
+            A little film under the fireworks
+          </motion.p>
           <motion.h1
             animate={{
               textShadow: [

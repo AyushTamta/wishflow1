@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import type { ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -27,17 +27,6 @@ export default function StoryDirector() {
     isTransitioning,
     setIsTransitioning,
   } = useStory();
-
-  // Automatically move from INTRO to INVITATION
-  useEffect(() => {
-    if (scene !== StoryScene.INTRO) return;
-
-    const timer = setTimeout(() => {
-      next();
-    }, 3500);
-
-    return () => clearTimeout(timer);
-  }, [scene, next]);
 
   const transitionToNext = useCallback(async () => {
     if (isTransitioning) return;
@@ -95,7 +84,7 @@ export default function StoryDirector() {
   };
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-black">
+    <div className="relative h-[100dvh] w-screen overflow-hidden bg-black">
       <AnimatePresence mode="wait">
         {scene === StoryScene.INTRO && (
           <motion.div
@@ -106,7 +95,7 @@ export default function StoryDirector() {
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
           >
-            <MarineDriveHero />
+            <MarineDriveHero onComplete={transitionToNext} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -116,27 +105,29 @@ export default function StoryDirector() {
       />
 
       <AnimatePresence mode="wait">
-        <motion.div
-          key={scene}
-          className="absolute inset-0"
-          initial={{
-            opacity: 0,
-            scale: 0.995,
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-          }}
-          exit={{
-            opacity: 0,
-            scale: 1.005,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
-        >
-          {sceneMap[scene] ?? null}
-        </motion.div>
+        {scene !== StoryScene.INTRO && (
+          <motion.div
+            key={scene}
+            className="absolute inset-0"
+            initial={{
+              opacity: 0,
+              scale: 0.995,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+            }}
+            exit={{
+              opacity: 0,
+              scale: 1.005,
+            }}
+            transition={{
+              duration: 0.6,
+            }}
+          >
+            {sceneMap[scene] ?? null}
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

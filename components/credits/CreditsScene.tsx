@@ -25,7 +25,7 @@ export default function CreditsScene({
 
   return (
     <motion.section
-      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black"
+      className="relative flex h-[100dvh] items-center justify-center overflow-hidden bg-black"
       initial={{
         opacity: 0,
       }}
@@ -78,7 +78,7 @@ export default function CreditsScene({
           opacity: 1,
         }}
         transition={{
-          duration: 43,
+          duration: 6,
         }}
         onAnimationComplete={() => setFinished(true)}
       />

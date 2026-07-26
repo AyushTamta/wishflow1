@@ -62,8 +62,8 @@ export default function Countdown() {
         exit={{ opacity: 0 }}
         className="
           absolute
-          h-[420px]
-          w-[420px]
+          h-[min(86vw,420px)]
+          w-[min(86vw,420px)]
           rounded-full
           border-4
           border-white/60
@@ -74,8 +74,8 @@ export default function Countdown() {
       <div
         className="
           absolute
-          h-[300px]
-          w-[300px]
+          h-[min(62vw,300px)]
+          w-[min(62vw,300px)]
           rounded-full
           border-2
           border-white/40
@@ -83,8 +83,8 @@ export default function Countdown() {
       />
 
       {/* Crosshair */}
-      <div className="absolute h-[420px] w-[2px] bg-white/20" />
-      <div className="absolute h-[2px] w-[420px] bg-white/20" />
+      <div className="absolute h-[min(86vw,420px)] w-[2px] bg-white/20" />
+      <div className="absolute h-[2px] w-[min(86vw,420px)] bg-white/20" />
 
       {/* Rotating Sweep */}
       <motion.div
@@ -96,8 +96,8 @@ export default function Countdown() {
         }}
         className="
           absolute
-          h-[420px]
-          w-[420px]
+          h-[min(86vw,420px)]
+          w-[min(86vw,420px)]
           rounded-full
         "
       >
@@ -135,7 +135,7 @@ export default function Countdown() {
             duration: 0.35,
           }}
           className="
-            text-[10rem]
+            text-[clamp(7rem,31vw,10rem)]
             font-black
             tracking-wider
             text-white
@@ -147,10 +147,10 @@ export default function Countdown() {
       </AnimatePresence>
 
       {/* Corner Marks */}
-      <div className="absolute left-16 top-16 h-8 w-8 border-l-2 border-t-2 border-white/40" />
-      <div className="absolute right-16 top-16 h-8 w-8 border-r-2 border-t-2 border-white/40" />
-      <div className="absolute bottom-16 left-16 h-8 w-8 border-b-2 border-l-2 border-white/40" />
-      <div className="absolute bottom-16 right-16 h-8 w-8 border-b-2 border-r-2 border-white/40" />
+      <div className="absolute left-5 top-5 h-6 w-6 border-l-2 border-t-2 border-white/40 sm:left-16 sm:top-16 sm:h-8 sm:w-8" />
+      <div className="absolute right-5 top-5 h-6 w-6 border-r-2 border-t-2 border-white/40 sm:right-16 sm:top-16 sm:h-8 sm:w-8" />
+      <div className="absolute bottom-5 left-5 h-6 w-6 border-b-2 border-l-2 border-white/40 sm:bottom-16 sm:left-16 sm:h-8 sm:w-8" />
+      <div className="absolute bottom-5 right-5 h-6 w-6 border-b-2 border-r-2 border-white/40 sm:bottom-16 sm:right-16 sm:h-8 sm:w-8" />
     </div>
   );
 }

@@ -13,7 +13,8 @@ import { useScene } from "@/hooks/useScene";
 
 const POWER_ON_DELAY = 500;
 const COUNTDOWN_DELAY = 2200;
-const FLASH_DELAY = 5200;
+// Give each leader frame a full beat on screen: 3, then 2, then 1.
+const FLASH_DELAY = 5750;
 
 export default function ProjectorScene({
   active,

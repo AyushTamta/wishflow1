@@ -2,7 +2,6 @@
 
 import {
   AnimatePresence,
-  animate,
   motion,
   useMotionValue,
 } from "framer-motion";
@@ -294,20 +293,16 @@ export default function FilmStrip({
           autoScroll.current = false;
         }}
         onDragEnd={(_, info) => {
-
           autoScroll.current = playing;
 
-          animate(
-            x,
-            x.get() +
-              info.velocity.x * 1.2,
-            {
-              type: "inertia",
-              velocity: info.velocity.x,
-              power: 1,
-              bounceStiffness: 0,
-              bounceDamping: 0,
-            }
+          // Framer's inertia animation can continue past every duplicated
+          // copy on touch devices, leaving an empty strip after the last
+          // photo. Put the drag position back inside the identical copies;
+          // the next animation frame then continues the reel seamlessly.
+          x.set(
+            wrapPosition(
+              x.get() + info.velocity.x * 0.12
+            )
           );
 
         }}

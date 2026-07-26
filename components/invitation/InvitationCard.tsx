@@ -97,7 +97,7 @@ export default function InvitationCard({
 
           {curtainsOpen && (
   <motion.div
-    className="relative z-50"
+    className="relative z-50 w-full max-w-3xl"
     initial={{
       opacity: 0,
       y: 60,
@@ -133,7 +133,7 @@ export default function InvitationCard({
               className="
                 relative
                 w-full
-                max-w-2xl
+                max-w-3xl
                 overflow-hidden
                 w-[min(100%,42rem)]
                 px-6
@@ -142,7 +142,7 @@ export default function InvitationCard({
                 backdrop-blur-xl
                 sm:px-10
                 sm:py-10
-                md:px-14
+                md:px-10
                 md:py-12
               "
             >
@@ -212,7 +212,9 @@ export default function InvitationCard({
                     duration: 0.8,
                   }}
                 >
-                  <Display>Ammu_Batashaa</Display>
+                  <Display className="mx-auto w-full whitespace-nowrap text-center text-[clamp(1.75rem,8vw,3.75rem)] tracking-[0.07em]">
+                    Ammu_Batashaa
+                  </Display>
                 </motion.div>
 
                 <motion.div

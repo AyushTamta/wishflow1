@@ -33,7 +33,9 @@ const FRAME_WIDTH = 430;
 const FRAME_HEIGHT = 580;
 const GAP = 8;
 
-const COPIES = 5;
+// Three copies are sufficient for seamless looping and avoid rendering dozens
+// of duplicate, high-resolution image frames on mobile and deployed builds.
+const COPIES = 3;
 
 const DEFAULT_SPEED = 2.4;
 
@@ -97,7 +99,7 @@ export default function FilmStrip({
       "change",
       (value) => {
 
-        if (value <= -SINGLE_LOOP * (COPIES - 2)) {
+        if (value <= -SINGLE_LOOP * (COPIES - 1)) {
 
           x.set(
             value +
@@ -123,13 +125,6 @@ export default function FilmStrip({
     x,
     SINGLE_LOOP,
   ]);
-
-  useEffect(() => {
-    photos.forEach((photo) => {
-      const img = new Image();
-      img.src = photo;
-    });
-  }, [photos]);
 
   useEffect(() => {
     if (!sealing || !onComplete) return;
@@ -359,9 +354,7 @@ export default function FilmStrip({
                 width={SINGLE_LOOP}
               />
 
-              <FilmHoleRow
-                count={1200}
-              />
+              <FilmHoleRow />
 
             </div>
 
@@ -420,9 +413,7 @@ export default function FilmStrip({
 
             <div className="pb-3">
 
-              <FilmHoleRow
-                count={1200}
-              />
+              <FilmHoleRow />
 
             </div>
 

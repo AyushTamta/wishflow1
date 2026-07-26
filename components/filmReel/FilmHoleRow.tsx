@@ -1,18 +1,14 @@
-interface FilmHoleRowProps {
-  count: number;
-}
-
-export default function FilmHoleRow({
-  count,
-}: FilmHoleRowProps) {
+export default function FilmHoleRow() {
   return (
-    <div className="flex justify-between px-4">
-      {Array.from({ length: count }).map((_, i) => (
-        <div
-          key={i}
-          className="h-[10px] w-[15px] rounded-[3px] bg-black shadow-inner"
-        />
-      ))}
-    </div>
+    <div
+      className="h-[22px] w-full"
+      style={{
+        backgroundImage:
+          "repeating-linear-gradient(90deg,#050505 0 5px,transparent 5px 8px)",
+        backgroundPosition: "center",
+        backgroundRepeat: "repeat-x",
+        backgroundSize: "8px 10px",
+      }}
+    />
   );
 }

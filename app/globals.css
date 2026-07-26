@@ -43,21 +43,3 @@ body {
     transform-origin: bottom center;
   }
 }
-
-/* Keep the feature-presentation card entirely in frame on shorter browser
-   viewports (including browsers with visible toolbars), without scrolling. */
-.feature-presentation-content {
-  transform-origin: center;
-}
-
-@media (max-height: 1200px) {
-  .feature-presentation-content {
-    scale: 0.86;
-  }
-}
-
-@media (orientation: landscape) and (max-height: 600px) {
-  .feature-presentation-content {
-    scale: 0.58;
-  }
-}

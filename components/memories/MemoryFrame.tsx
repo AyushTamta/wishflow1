@@ -94,7 +94,7 @@ export default function MemoryFrame({
         duration: 0.8,
         ease: "easeInOut",
       }}
-      className="relative mx-auto w-full max-w-6xl"
+      className="relative mx-auto w-full max-w-5xl"
     >
       {/* Background glow */}
       <div className="absolute -inset-8 rounded-[40px] bg-amber-300/10 blur-3xl" />
@@ -116,7 +116,7 @@ export default function MemoryFrame({
               fill
               priority
               draggable={false}
-              sizes="(max-width:768px)100vw,1200px"
+              sizes="(max-width:768px)100vw,1024px"
               className="select-none object-cover"
             />
           </div>

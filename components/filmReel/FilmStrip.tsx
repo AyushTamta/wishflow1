@@ -5,7 +5,6 @@ import {
   animate,
   motion,
   useMotionValue,
-  useSpring,
 } from "framer-motion";
 import { FastForward, Pause, Play, Rabbit, Snail } from "lucide-react";
 
@@ -86,16 +85,9 @@ export default function FilmStrip({
       -SINGLE_LOOP
     );
 
-  const springX =
-    useSpring(x, {
-      stiffness: 180,
-      damping: 34,
-      mass: 0.65,
-    });
-
       useEffect(() => {
 
-    return springX.on(
+    return x.on(
       "change",
       (value) => {
 
@@ -121,7 +113,6 @@ export default function FilmStrip({
     );
 
   }, [
-    springX,
     x,
     SINGLE_LOOP,
   ]);
@@ -257,7 +248,7 @@ export default function FilmStrip({
       >
         <Reel
           side="left"
-          progress={springX}
+          progress={x}
         />
       </div>
 
@@ -270,7 +261,7 @@ export default function FilmStrip({
       >
         <Reel
           side="right"
-          progress={springX}
+          progress={x}
         />
       </div>
 
@@ -302,7 +293,7 @@ export default function FilmStrip({
         dragMomentum
         className="landscape-reel absolute left-1/2 top-[46%] z-30 flex -translate-x-1/2 -translate-y-1/2 scale-[0.56] sm:scale-[0.72] lg:top-1/2 lg:scale-100"
         style={{
-          x: springX,
+          x,
           filter:
             "drop-shadow(0 25px 45px rgba(0,0,0,.65))",
         }}

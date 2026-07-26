@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 
-const BIRTHDAY_START = new Date("2026-07-26T08:15:00+05:30").getTime();
+const BIRTHDAY_START = new Date("2026-07-27T00:00:00+05:30").getTime();
 
 function splitRemaining(remaining: number) {
   const total = Math.max(0, remaining);

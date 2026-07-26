@@ -12,6 +12,25 @@ interface MarineDriveHeroProps {
   onComplete: () => void;
 }
 
+async function requestAppFullscreen() {
+  const root = document.documentElement as HTMLElement & {
+    webkitRequestFullscreen?: () => Promise<void> | void;
+  };
+
+  try {
+    if (document.fullscreenElement) return;
+
+    if (root.requestFullscreen) {
+      await root.requestFullscreen({ navigationUI: "hide" });
+      return;
+    }
+
+    await root.webkitRequestFullscreen?.();
+  } catch {
+    // Safari may deny page fullscreen. The story still starts normally.
+  }
+}
+
 export default function MarineDriveHero({ onComplete }: MarineDriveHeroProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [celebrationStarted, setCelebrationStarted] = useState(false);
@@ -24,6 +43,9 @@ export default function MarineDriveHero({ onComplete }: MarineDriveHeroProps) {
   }, [celebrationStarted, onComplete]);
 
   const startCelebration = () => {
+    // Must be requested directly from this button's trusted user gesture.
+    void requestAppFullscreen();
+
     // Change the screen during the trusted button event. Audio playback can
     // resolve later (or be rejected by a browser) and must not block the story.
     setCelebrationStarted(true);

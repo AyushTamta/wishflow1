@@ -82,20 +82,17 @@ export default function FilmStrip({
 
   const x =
     useMotionValue(
-      -SINGLE_LOOP
+      SINGLE_LOOP / 2
     );
 
-  // Keep the visible strip inside the middle and final copies. As those
-  // copies are identical, resetting its position is visually seamless.
+  // The strip is centered with `-translate-x-1/2`, so x=0 places the middle
+  // copy at the viewport centre. Keep x within half a loop either side of
+  // that middle copy. Crossing an edge swaps to the identical copy instead
+  // of exposing the end of the rendered strip.
   const wrapPosition = useCallback(
     (value: number) => {
-      const loopStart = -SINGLE_LOOP * (COPIES - 1);
-      const offset = value - loopStart;
-
-      return (
-        ((offset % SINGLE_LOOP) + SINGLE_LOOP) % SINGLE_LOOP +
-        loopStart
-      );
+      const halfLoop = SINGLE_LOOP / 2;
+      return ((value + halfLoop) % SINGLE_LOOP + SINGLE_LOOP) % SINGLE_LOOP - halfLoop;
     },
     [SINGLE_LOOP]
   );

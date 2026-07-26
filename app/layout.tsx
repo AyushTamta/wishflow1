@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "WishFlow",
   description: "An interactive cinematic story.",
+  appleWebApp: {
+    capable: true,
+    title: "WishFlow",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export const viewport: Viewport = {

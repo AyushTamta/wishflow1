@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import CountdownJukebox from "./CountdownJukebox";
+import CountdownTrivia from "./CountdownTrivia";
 import SRKQuiz from "./SRKQuiz";
 
 const QUIZ_START = new Date("2026-07-26T22:30:00+05:30").getTime();
@@ -149,6 +150,7 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         <div className="mx-auto mt-4 grid w-full max-w-5xl grid-cols-1 gap-3 text-left sm:mt-5 md:grid-cols-2 md:items-stretch md:gap-4">
           <CountdownJukebox className="mt-0 max-w-none sm:mt-0" />
           <SRKQuiz now={now} unlockAt={QUIZ_START} className="mt-0 max-w-none" />
+          <CountdownTrivia />
         </div>
       </motion.section>
     </main>

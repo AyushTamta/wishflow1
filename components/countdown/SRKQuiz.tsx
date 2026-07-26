@@ -38,11 +38,11 @@ export default function SRKQuiz({ now, unlockAt }: SRKQuizProps) {
   useEffect(() => setMounted(true), []);
 
   const startQuiz = () => {
+    startMusic();
     setScreen("intro");
   };
 
   const beginQuestions = () => {
-    startMusic();
     setScreen("question");
   };
 

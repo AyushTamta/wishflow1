@@ -42,16 +42,34 @@ function splitRemaining(remaining: number) {
   return { days, hours, minutes, seconds, milliseconds };
 }
 
+function playTick(context: AudioContext) {
+  const now = context.currentTime;
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+
+  oscillator.type = "square";
+  oscillator.frequency.setValueAtTime(1_150, now);
+  gain.gain.setValueAtTime(0.075, now);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.085);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.09);
+}
+
 function useTickSound(enabled: boolean) {
   const [unlocked, setUnlocked] = useState(
     () => tickAudioContext?.state === "running"
   );
 
-  const enableSound = useCallback(async () => {
+  const enableSound = useCallback(() => {
     if (!tickAudioContext) tickAudioContext = new AudioContext();
 
-    await tickAudioContext.resume();
-    setUnlocked(tickAudioContext.state === "running");
+    // iOS Safari only permits the first audible sound within the tap itself.
+    // Start one now, then keep the same audio context for subsequent ticks.
+    playTick(tickAudioContext);
+    void tickAudioContext.resume().then(() => {
+      setUnlocked(tickAudioContext?.state === "running");
+    });
   }, []);
 
   useEffect(() => {
@@ -69,20 +87,7 @@ function useTickSound(enabled: boolean) {
   useEffect(() => {
     if (!enabled || !unlocked || !tickAudioContext) return;
 
-    const tick = () => {
-      const context = tickAudioContext;
-      if (!context) return;
-
-      const oscillator = context.createOscillator();
-      const gain = context.createGain();
-      oscillator.type = "square";
-      oscillator.frequency.setValueAtTime(1_450, context.currentTime);
-      gain.gain.setValueAtTime(0.028, context.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.055);
-      oscillator.connect(gain).connect(context.destination);
-      oscillator.start();
-      oscillator.stop(context.currentTime + 0.06);
-    };
+    const tick = () => playTick(tickAudioContext!);
 
     let previousSecond = Math.floor(Date.now() / 1_000);
     tick();

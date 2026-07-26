@@ -240,7 +240,7 @@ export default function FilmStrip({
       <Projector />
 
       <motion.div
-        className="pointer-events-none absolute left-1/2 top-6 z-[125] -translate-x-1/2 text-center"
+        className="landscape-reel-title pointer-events-none absolute left-1/2 top-6 z-[125] -translate-x-1/2 text-center"
         initial={{ opacity: 0, y: -18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.45, duration: 0.8 }}
@@ -305,7 +305,7 @@ export default function FilmStrip({
         drag="x"
         dragElastic={0.04}
         dragMomentum
-        className="absolute left-1/2 top-[46%] z-30 flex -translate-x-1/2 -translate-y-1/2 scale-[0.56] sm:scale-[0.72] lg:top-1/2 lg:scale-100"
+        className="landscape-reel absolute left-1/2 top-[46%] z-30 flex -translate-x-1/2 -translate-y-1/2 scale-[0.56] sm:scale-[0.72] lg:top-1/2 lg:scale-100"
         style={{
           x: springX,
           filter:
@@ -435,7 +435,7 @@ export default function FilmStrip({
             {/* Speed Controller */}
 
       <div
-        className="
+        className="landscape-reel-controls
           absolute
           left-1/2
           bottom-[calc(env(safe-area-inset-bottom)+0.75rem)]

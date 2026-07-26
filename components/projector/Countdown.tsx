@@ -62,8 +62,8 @@ export default function Countdown() {
         exit={{ opacity: 0 }}
         className="
           absolute
-          h-[min(86vw,420px)]
-          w-[min(86vw,420px)]
+          h-[min(86vw,72dvh,420px)]
+          w-[min(86vw,72dvh,420px)]
           rounded-full
           border-4
           border-white/60
@@ -74,8 +74,8 @@ export default function Countdown() {
       <div
         className="
           absolute
-          h-[min(62vw,300px)]
-          w-[min(62vw,300px)]
+          h-[min(62vw,54dvh,300px)]
+          w-[min(62vw,54dvh,300px)]
           rounded-full
           border-2
           border-white/40
@@ -83,8 +83,8 @@ export default function Countdown() {
       />
 
       {/* Crosshair */}
-      <div className="absolute h-[min(86vw,420px)] w-[2px] bg-white/20" />
-      <div className="absolute h-[2px] w-[min(86vw,420px)] bg-white/20" />
+      <div className="absolute h-[min(86vw,72dvh,420px)] w-[2px] bg-white/20" />
+      <div className="absolute h-[2px] w-[min(86vw,72dvh,420px)] bg-white/20" />
 
       {/* Rotating Sweep */}
       <motion.div
@@ -96,8 +96,8 @@ export default function Countdown() {
         }}
         className="
           absolute
-          h-[min(86vw,420px)]
-          w-[min(86vw,420px)]
+          h-[min(86vw,72dvh,420px)]
+          w-[min(86vw,72dvh,420px)]
           rounded-full
         "
       >

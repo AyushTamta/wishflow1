@@ -26,3 +26,38 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .landscape-reel {
+    scale: 0.42;
+    top: 43% !important;
+  }
+
+  .landscape-reel-title {
+    display: none;
+  }
+
+  .landscape-reel-controls {
+    bottom: calc(env(safe-area-inset-bottom) + 0.25rem) !important;
+    scale: 0.82;
+    transform-origin: bottom center;
+  }
+}
+
+/* Keep the feature-presentation card entirely in frame on shorter browser
+   viewports (including browsers with visible toolbars), without scrolling. */
+.feature-presentation-content {
+  transform-origin: center;
+}
+
+@media (max-height: 1200px) {
+  .feature-presentation-content {
+    scale: 0.86;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .feature-presentation-content {
+    scale: 0.58;
+  }
+}

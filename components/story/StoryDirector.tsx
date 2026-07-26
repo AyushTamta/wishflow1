@@ -84,12 +84,12 @@ export default function StoryDirector() {
   };
 
   return (
-    <div className="relative h-[100dvh] w-screen overflow-x-hidden bg-black">
+    <div className="relative h-[100dvh] w-screen overflow-hidden bg-black">
       <AnimatePresence mode="wait">
         {scene === StoryScene.INTRO && (
           <motion.div
             key="marine-drive"
-            className="absolute inset-0 overflow-x-hidden overflow-y-auto overscroll-contain"
+            className="absolute inset-0 overflow-hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

@@ -80,27 +80,6 @@ function LaunchCountdown({ children }: BirthdayGateProps) {
   );
 }
 
-function ReadyToReveal({ onStart }: { onStart: () => void }) {
-  return (
-    <main className="relative flex h-[100svh] min-h-[100dvh] items-center justify-center overflow-hidden bg-black px-5 text-center">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,217,133,.2),transparent_28%),linear-gradient(135deg,#030303,#1c0f08,#030303)]" />
-      <motion.div
-        className="pointer-events-none absolute h-[min(74vw,38rem)] w-[min(74vw,38rem)] rounded-full border border-[#e6c67a]/25"
-        animate={{ rotate: 360, scale: [0.94, 1.04, 0.94] }}
-        transition={{ rotate: { duration: 18, repeat: Infinity, ease: "linear" }, scale: { duration: 3, repeat: Infinity } }}
-      />
-      <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="relative z-10">
-        <p className="text-[10px] uppercase tracking-[0.46em] text-[#e6c67a]/75">The moment is here</p>
-        <h1 className="mt-5 font-serif text-4xl text-[#fff0c8] sm:text-5xl md:text-6xl">The wait is finally over.</h1>
-        <p className="mt-4 text-sm text-white/65 sm:text-base">One tap, and the story begins.</p>
-        <button type="button" onClick={onStart} className="mt-8 rounded-full border border-[#e6c67a]/65 bg-[#e6c67a]/15 px-7 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#fff0c8] shadow-[0_0_28px_rgba(230,198,122,.16)] transition hover:bg-[#e6c67a]/25">
-          ▶ Start the reveal
-        </button>
-      </motion.div>
-    </main>
-  );
-}
-
 export default function BirthdayGate({ children }: BirthdayGateProps) {
   const [now, setNow] = useState<number | null>(null);
   const [revealStarted, setRevealStarted] = useState(false);
@@ -112,9 +91,9 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
     return () => window.clearInterval(interval);
   }, []);
 
-  if (now !== null && now >= BIRTHDAY_START) {
-    return revealStarted ? <LaunchCountdown>{children}</LaunchCountdown> : <ReadyToReveal onStart={() => setRevealStarted(true)} />;
-  }
+  const revealReady = now !== null && now >= BIRTHDAY_START;
+
+  if (revealReady && revealStarted) return <LaunchCountdown>{children}</LaunchCountdown>;
 
   const remaining = splitRemaining(BIRTHDAY_START - (now ?? BIRTHDAY_START));
 
@@ -139,18 +118,30 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         transition={{ duration: 1.1, ease: "easeOut" }}
         className="relative z-10 my-auto w-full max-w-5xl rounded-[1.5rem] border border-[#e6c67a]/20 bg-black/20 px-4 py-5 shadow-[0_0_100px_rgba(0,0,0,.55)] backdrop-blur-sm sm:rounded-[2rem] sm:px-5 sm:py-6 lg:px-12 lg:py-14"
       >
-        <p className="text-[10px] font-semibold uppercase tracking-[0.48em] text-[#f2c867]">⚠ No spoilers</p>
-        <h1 className="mt-3 font-serif text-2xl text-white sm:mt-4 sm:text-3xl lg:mt-5 lg:text-6xl">Curiosity is part of the experience.</h1>
-        <p className="mt-2 text-xs tracking-wide text-white/55 sm:mt-4 sm:text-sm lg:text-base">Please wait...</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.48em] text-[#f2c867]">{revealReady ? "The moment is here" : "⚠ No spoilers"}</p>
+        <h1 className="mt-3 font-serif text-2xl text-white sm:mt-4 sm:text-3xl lg:mt-5 lg:text-6xl">{revealReady ? "The wait is finally over." : "Curiosity is part of the experience."}</h1>
+        <p className="mt-2 text-xs tracking-wide text-white/55 sm:mt-4 sm:text-sm lg:text-base">{revealReady ? "One tap, and the story begins." : "Please wait..."}</p>
 
         <div className="mx-auto my-3 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/70 to-transparent sm:my-5 lg:my-9" />
-        <div className="grid grid-cols-5 items-start justify-items-center gap-x-1 gap-y-3 sm:gap-x-3 lg:gap-x-8 lg:gap-y-8">
-          <TimeUnit value={remaining.days} label="Days" />
-          <TimeUnit value={remaining.hours} label="Hours" />
-          <TimeUnit value={remaining.minutes} label="Minutes" />
-          <TimeUnit value={remaining.seconds} label="Seconds" />
-          <TimeUnit value={remaining.milliseconds} label="Milliseconds" digits={3} />
-        </div>
+        {revealReady ? (
+          <motion.button
+            type="button"
+            onClick={() => setRevealStarted(true)}
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="rounded-full border border-[#e6c67a]/65 bg-[#e6c67a]/15 px-7 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#fff0c8] shadow-[0_0_28px_rgba(230,198,122,.16)] transition hover:bg-[#e6c67a]/25"
+          >
+            ▶ Start the reveal
+          </motion.button>
+        ) : (
+          <div className="grid grid-cols-5 items-start justify-items-center gap-x-1 gap-y-3 sm:gap-x-3 lg:gap-x-8 lg:gap-y-8">
+            <TimeUnit value={remaining.days} label="Days" />
+            <TimeUnit value={remaining.hours} label="Hours" />
+            <TimeUnit value={remaining.minutes} label="Minutes" />
+            <TimeUnit value={remaining.seconds} label="Seconds" />
+            <TimeUnit value={remaining.milliseconds} label="Milliseconds" digits={3} />
+          </div>
+        )}
         <div className="mx-auto mt-3 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/45 to-transparent sm:mt-5 lg:mt-9" />
         <p className="mt-3 text-[11px] italic text-[#f1d99c]/70 sm:mt-4 sm:text-xs lg:mt-6">Some surprises are worth waiting for. 🎬</p>
         <CountdownJukebox />

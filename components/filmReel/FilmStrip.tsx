@@ -9,6 +9,7 @@ import {
 import { FastForward, Pause, Play, Rabbit, Snail } from "lucide-react";
 
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -36,7 +37,7 @@ const GAP = 8;
 // of duplicate, high-resolution image frames on mobile and deployed builds.
 const COPIES = 3;
 
-const DEFAULT_SPEED = 2.4;
+const DEFAULT_SPEED = 0.5;
 
 export default function FilmStrip({
   photos,
@@ -85,37 +86,20 @@ export default function FilmStrip({
       -SINGLE_LOOP
     );
 
-      useEffect(() => {
+  // Keep the visible strip inside the middle and final copies. As those
+  // copies are identical, resetting its position is visually seamless.
+  const wrapPosition = useCallback(
+    (value: number) => {
+      const loopStart = -SINGLE_LOOP * (COPIES - 1);
+      const offset = value - loopStart;
 
-    return x.on(
-      "change",
-      (value) => {
-
-        if (value <= -SINGLE_LOOP * (COPIES - 1)) {
-
-          x.set(
-            value +
-              SINGLE_LOOP
-          );
-
-        }
-
-        if (value > -SINGLE_LOOP * 0.5) {
-
-          x.set(
-            value -
-              SINGLE_LOOP
-          );
-
-        }
-
-      }
-    );
-
-  }, [
-    x,
-    SINGLE_LOOP,
-  ]);
+      return (
+        ((offset % SINGLE_LOOP) + SINGLE_LOOP) % SINGLE_LOOP +
+        loopStart
+      );
+    },
+    [SINGLE_LOOP]
+  );
 
   useEffect(() => {
     if (!sealing || !onComplete) return;
@@ -144,8 +128,10 @@ export default function FilmStrip({
       e.preventDefault();
 
       x.set(
-        x.get()
-          - (e.deltaY + e.deltaX) * 0.65
+        wrapPosition(
+          x.get() -
+            (e.deltaY + e.deltaX) * 0.65
+        )
       );
 
     };
@@ -165,7 +151,7 @@ export default function FilmStrip({
         wheel
       );
 
-  }, [x]);
+  }, [x, wrapPosition]);
 
   useEffect(() => {
 
@@ -187,8 +173,10 @@ export default function FilmStrip({
         ) {
 
           x.set(
-            x.get() -
-              speed * delta * 0.18
+            wrapPosition(
+              x.get() -
+                speed * delta * 0.18
+            )
           );
 
         }
@@ -214,6 +202,7 @@ export default function FilmStrip({
     speed,
     x,
     playing,
+    wrapPosition,
   ]);
 
     return (

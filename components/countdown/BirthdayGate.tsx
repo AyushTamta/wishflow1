@@ -4,9 +4,32 @@ import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 
-const BIRTHDAY_START = new Date("2026-07-27T00:00:00+05:30").getTime();
+const BIRTHDAY_START = new Date("2026-07-26T12:00:00+05:30").getTime();
 
 let tickAudioContext: AudioContext | null = null;
+
+const OM_SHANTI_OM_TRIVIA = [
+  {
+    question: "Who made her Hindi-film debut as Shantipriya?",
+    answer: "Deepika Padukone ✨",
+  },
+  {
+    question: "Which year did Om Shanti Om light up the big screen?",
+    answer: "2007 🎬",
+  },
+  {
+    question: "Who directed this iconic reincarnation romance?",
+    answer: "Farah Khan 🎞️",
+  },
+  {
+    question: "What is at the heart of Om's second chance?",
+    answer: "Reincarnation — and a story unfinished. 🔥",
+  },
+  {
+    question: "What is the name of the film's luminous leading lady?",
+    answer: "Shantipriya 💫",
+  },
+];
 
 function splitRemaining(remaining: number) {
   const total = Math.max(0, remaining);
@@ -90,6 +113,47 @@ function TimeUnit({ value, label, digits = 2 }: { value: number; label: string; 
       </motion.div>
       <p className="mt-3 text-[9px] uppercase tracking-[0.28em] text-[#e7c77d]/65 md:text-[10px]">{label}</p>
     </div>
+  );
+}
+
+function OmShantiOmTrivia() {
+  const [index, setIndex] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setIndex((current) => (current + 1) % OM_SHANTI_OM_TRIVIA.length);
+      setRevealed(false);
+    }, 14_000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const trivia = OM_SHANTI_OM_TRIVIA[index];
+
+  return (
+    <button
+      type="button"
+      onClick={() => setRevealed((current) => !current)}
+      className="mt-5 w-full max-w-xl rounded-2xl border border-[#e6c67a]/25 bg-[#120b06]/65 px-4 py-3 text-center shadow-[0_0_32px_rgba(230,198,122,.08)] transition hover:border-[#e6c67a]/50"
+      aria-label={revealed ? "Hide answer" : "Reveal answer"}
+    >
+      <p className="text-[9px] font-semibold uppercase tracking-[0.34em] text-[#f2c867]/85">
+        ✦ Om Shanti Om: Cinephile Intermission ✦
+      </p>
+      <motion.p
+        key={`${index}-${revealed}`}
+        initial={{ opacity: 0, y: 5 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25 }}
+        className="mt-2 text-sm text-white/85 md:text-base"
+      >
+        {revealed ? trivia.answer : trivia.question}
+      </motion.p>
+      <p className="mt-2 text-[9px] uppercase tracking-[0.2em] text-[#e6c67a]/60">
+        {revealed ? "Tap to hide" : "Tap to reveal"}
+      </p>
+    </button>
   );
 }
 
@@ -182,29 +246,30 @@ export default function BirthdayGate({ children }: BirthdayGateProps) {
         initial={{ opacity: 0, y: 22 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.1, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-5xl rounded-[2rem] border border-[#e6c67a]/20 bg-black/20 px-5 py-10 shadow-[0_0_100px_rgba(0,0,0,.55)] backdrop-blur-sm md:px-12 md:py-14"
+        className="relative z-10 w-full max-w-5xl rounded-[2rem] border border-[#e6c67a]/20 bg-black/20 px-5 py-6 shadow-[0_0_100px_rgba(0,0,0,.55)] backdrop-blur-sm md:px-12 md:py-14"
       >
         <p className="text-[10px] font-semibold uppercase tracking-[0.48em] text-[#f2c867]">⚠ No spoilers</p>
-        <h1 className="mt-5 font-serif text-4xl text-white md:text-6xl">Curiosity is part of the experience.</h1>
+        <h1 className="mt-4 font-serif text-3xl text-white md:mt-5 md:text-6xl">Curiosity is part of the experience.</h1>
         <p className="mt-4 text-sm tracking-wide text-white/55 md:text-base">Please wait...</p>
         <button
           type="button"
           onClick={() => void enableSound()}
-          className="mt-5 rounded-full border border-[#e6c67a]/40 bg-[#e6c67a]/10 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#f2c867] transition hover:bg-[#e6c67a]/20"
+          className="mt-3 rounded-full border border-[#e6c67a]/40 bg-[#e6c67a]/10 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#f2c867] transition hover:bg-[#e6c67a]/20 md:mt-5"
         >
           {unlocked ? "✓ Ticking enabled" : "Tap to enable ticking"}
         </button>
 
-        <div className="mx-auto my-9 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/70 to-transparent" />
-        <div className="flex flex-wrap items-start justify-center gap-x-3 gap-y-8 md:gap-x-8">
+        <div className="mx-auto my-5 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/70 to-transparent md:my-9" />
+        <div className="flex flex-wrap items-start justify-center gap-x-3 gap-y-4 md:gap-x-8 md:gap-y-8">
           <TimeUnit value={remaining.days} label="Days" />
           <TimeUnit value={remaining.hours} label="Hours" />
           <TimeUnit value={remaining.minutes} label="Minutes" />
           <TimeUnit value={remaining.seconds} label="Seconds" />
           <TimeUnit value={remaining.milliseconds} label="Milliseconds" digits={3} />
         </div>
-        <div className="mx-auto mt-9 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/45 to-transparent" />
-        <p className="mt-6 text-xs italic text-[#f1d99c]/70">Some surprises are worth waiting for. 🎬</p>
+        <div className="mx-auto mt-5 h-px max-w-2xl bg-gradient-to-r from-transparent via-[#e6c67a]/45 to-transparent md:mt-9" />
+        <p className="mt-4 text-xs italic text-[#f1d99c]/70 md:mt-6">Some surprises are worth waiting for. 🎬</p>
+        <OmShantiOmTrivia />
       </motion.section>
     </main>
   );
